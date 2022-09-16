@@ -23,6 +23,11 @@ namespace WebProjectsCollection.Controllers
             return View();
         }
 
+        public IActionResult DVDBounceLogo()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

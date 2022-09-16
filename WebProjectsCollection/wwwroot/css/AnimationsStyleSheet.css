@@ -1,0 +1,55 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+.RainbowDVD {
+    animation-name: rainbow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    position: absolute;
+    width: 120px;
+    height: 80px;
+}
+
+.mask1 {
+    mask-image: url(../images/DVDLogo.png);
+    mask-repeat: no-repeat;
+    mask-size: 120px 80px;
+    mask-position: 0px;
+    -webkit-mask-image: url(../images/DVDLogo.png);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 120px 80px;
+    -webkit-mask-position: 0px;
+}
+
+.NormalBtn {
+
+}
+
+@keyframes rainbow {
+    0% {
+        background-color: rgb(255, 0, 0);
+    }
+    14.2% {
+        background-color: rgb(255, 165, 0);
+    }
+    28.4% {
+        background-color: rgb(255, 255, 0);
+    }
+    42.6% {
+        background-color: rgb(0, 128, 0);
+    }
+    56.8% {
+        background-color: rgb(0, 0, 255);
+    }
+    71.2% {
+        background-color: rgb(75, 0, 130);
+    }
+    85.4% {
+        background-color: rgb(238, 130, 238);
+    }
+    100% {
+        background-color: rgb(255, 0, 0);
+    }
+}
