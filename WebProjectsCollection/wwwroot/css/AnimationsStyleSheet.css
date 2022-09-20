@@ -8,18 +8,18 @@
     animation-iteration-count: infinite;
     animation-fill-mode: both;
     position: absolute;
-    width: 120px;
-    height: 80px;
+    width: 100px;
+    height: 60px;
 }
 
 .mask1 {
     mask-image: url(../images/DVDLogo.png);
     mask-repeat: no-repeat;
-    mask-size: 120px 80px;
+    mask-size: 100px 60px;
     mask-position: 0px;
     -webkit-mask-image: url(../images/DVDLogo.png);
     -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: 120px 80px;
+    -webkit-mask-size: 100px 60px;
     -webkit-mask-position: 0px;
 }
 
