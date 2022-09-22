@@ -1,0 +1,30 @@
+﻿@{
+	ViewData["Title"] = "ShooterGame";
+	Layout = "FreeLayout";
+}
+
+<link href="~/css/ShooterCSS.css" rel="stylesheet" asp-append-version="true"/>
+
+<div class="game-container">
+	<div id="scoretab" class="score-tab">
+		<span>Total Shoots: <span id="TotalShoots">0</span></span>
+		<span>Score: <span id="Score">0</span></span>
+		<span>Miss Shoots: <span id="MissShoots">0</span></span>
+		<span>Accuracy: <span id="Accuracy">0%</span></span>
+	</div>
+
+	<div id="Plain" class="plain">
+		<div id="UserTab" class="user-tab">
+			<div class="target-container">
+				<label>Amount</label>
+				<input id="TargetAmount" type="number" value="0" />
+				<label>Size</label>
+				<input id="TargetSize" type="number" value="1" min="1" max="12" />
+			</div>
+			<div id="TargetContainer"></div>
+			<input type="button" id="SetButton" value="Play" />
+		</div>
+	</div>
+</div>
+
+<script src="~/js/ShooterScript.js" asp-append-version="true"></script>

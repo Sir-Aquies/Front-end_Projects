@@ -1,0 +1,120 @@
+﻿* {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	background-color: black;
+	overflow: hidden;
+	position: relative;
+	height: 100%;
+}
+
+.game-container {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.score-tab {
+	position: absolute;
+	display: flex;
+	justify-content: space-around;
+	align-self: flex-start;
+	width: 100%;
+	border-bottom: 0.5vh solid green;
+	font-size: 3vh;
+	color: green;
+}
+
+.plain {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	border: 0.5vh solid green;
+}
+
+.user-tab {
+	width: 50%;
+	height: 50%;
+	border: 0.5vh solid green;
+	position: absolute;
+	/*border-radius: 1%/1%;*/
+	color: green;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: wrap;
+}
+
+input, #TargetContainer {
+	background-color: transparent;
+	color: green;
+	font-size: 4vh;
+	/*border-radius: 10%/10%;*/
+	border: 0.5vh solid green;
+	margin: 0.3vh;
+}
+
+label {
+	font-size: 4vh;
+}
+
+#TargetAmount {
+	width: 80%;
+	height: fit-content;
+}
+
+#TargetAmount:focus {
+	outline: 3px solid green;
+	box-shadow: 0px 0px 35px green;
+}
+
+#TargetSize {
+	width: 80%;
+	height: fit-content;
+}
+
+#TargetSize:focus {
+	outline: 3px solid green;
+	box-shadow: 0px 0px 35px green;
+}
+
+#SetButton {
+	width: 35%;
+	height: fit-content;
+	margin-top: 1vh;
+	font-size: 5vh;
+	padding: 0.5vh;
+}
+
+#SetButton:hover {
+	box-shadow: 0px 0px 35px green;
+}
+
+#TargetContainer {
+	width: 50%;
+	height: 60%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.target-container {
+	width: 40%;
+	height: 60%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-right: 0.2vh;
+}
+
+.target-container * {
+	margin: 0 auto;
+}
