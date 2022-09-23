@@ -1,19 +1,4 @@
-﻿const plain = document.getElementById("Plain");
-
-const score = document.getElementById("Score");
-const ScoreTab = document.getElementById("scoretab");
-const totalShoots = document.getElementById("TotalShoots");
-const missShoots = document.getElementById("MissShoots");
-const accuracy = document.getElementById("Accuracy");
-
-
-const targetAmount = document.getElementById("TargetAmount");
-const setbutton = document.getElementById("SetButton");
-
-const targetSizeValue = document.getElementById("TargetSize");
-const targetContainer = document.getElementById("TargetContainer");
-
-var amount = 1;
+﻿var amount = 1;
 const targetsArray = [];
 
 class Target {
@@ -27,53 +12,25 @@ class Target {
 	ResetPosition() {
 		const plain = document.getElementById("Plain");
 
-		let target_x = Math.floor(Math.random() * plain.offsetWidth) + parseInt(this.target.style.width);
-		let target_y = Math.floor(Math.random() * plain.offsetHeight) + parseInt(this.target.style.height);
+		//Set the absolute width and height of the plain.
+		plain.offsetRight = plain.offsetLeft + plain.offsetWidth;
+		plain.offsetBottom = plain.offsetTop + plain.offsetHeight;
 
-		if ((target_x + parseInt(this.target.style.width)) >= plain.offsetRight) {
-			target_x -= (target_x + parseInt(this.target.style.width) - plain.offsetRight);
-		}
-		if (target_x <= plain.offsetLeft) {
-			target_x += (plain.offsetLeft - target_x);
-		}
+		//Ramdomize the position of the target using minimum (width/height of the target) and maximun (right/bottom of the plain).
+		let target_x = Math.floor(Math.random() * (plain.offsetRight - parseInt(this.target.style.width))) + parseInt(this.target.style.width);
+		let target_y = Math.floor(Math.random() * (plain.offsetBottom - parseInt(this.target.style.height))) + parseInt(this.target.style.height);
 
+		//if the target left/top position plus the his width/height is higher than the plain the width/height of the target is subtracted.
+		if (target_x + parseInt(this.target.style.width) >= plain.offsetRight) {
+			target_x -= parseInt(this.target.style.width);
+		}
 		if ((target_y + parseInt(this.target.style.height)) >= plain.offsetBottom) {
-			target_y -= (target_y + parseInt(this.target.style.height) - plain.offsetBottom);
-		}
-		if (target_y <= plain.offsetTop) {
-			target_y += (plain.offsetTop - target_y);
+			target_y -= parseInt(this.target.style.height);
 		}
 
-		this.target.style.left = `${target_x}px`;
-		this.target.style.top = `${target_y}px`;
+		this.target.style.left = `${ target_x }px`;
+		this.target.style.top = `${ target_y }px`;
 	}
-
-	//ResetPosition() {
-	//	const plain = document.getElementById("Plain");
-
-	//	plain.offsetRight = plain.offsetLeft + plain.offsetWidth;
-	//	plain.offsetBottom = plain.offsetTop + plain.offsetHeight;
-
-	//	let target_x = Math.floor(Math.random() * plain.offsetRight);
-	//	let target_y = Math.floor(Math.random() * plain.offsetBottom);
-
-	//	if ((target_x + parseInt(this.target.style.width)) >= plain.offsetRight) {
-	//		target_x -= (target_x + parseInt(this.target.style.width) - plain.offsetRight);
-	//	}
-	//	if (target_x <= plain.offsetLeft) {
-	//		target_x += (plain.offsetLeft - target_x);
-	//	}
-
-	//	if ((target_y + parseInt(this.target.style.height)) >= plain.offsetBottom) {
-	//		target_y -= (target_y + parseInt(this.target.style.height) - plain.offsetBottom);
-	//	}
-	//	if (target_y <= plain.offsetTop) {
-	//		target_y += (plain.offsetTop - target_y);
-	//	}
-
-	//	this.target.style.left = `${target_x}px`;
-	//	this.target.style.top = `${target_y}px`;
-	//}
 
 	Resize(w, h) {
 		this.target.style.width = `${w}0px`;
@@ -86,40 +43,43 @@ class Target {
 	}
 }
 
+//Create a target that will work as a showcase for the size of all the targets.
 const targetShowcase = CreaterTarget(1, true);
 
-setbutton.addEventListener("click", () => { TargetAmount(parseInt(targetAmount.value)) });
+//Every time the value of TargetSize changes we modify the size of the showcase.
+document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize() });
 
-targetSizeValue.addEventListener("change", () => { TargetSize(targetSizeValue.value) });
+function TargetShowcaseSize() {
+	const targetSize = document.getElementById("TargetSize");
+	let size = parseInt(targetSize.value);
 
-window.addEventListener("load", () => {
-	//ScoreTab.style.width = `${window.innerWidth - 17}px`;
+	if (size > 15) {
+		targetSize.value = 15;
+		return;
+	}
 
-	//plain.style.width = `${window.innerWidth - 17}px`;
-	//plain.style.height = `${window.innerHeight - ScoreTab.offsetHeight - 17}px`;
-
-	//usertab.style.width = `${(window.innerWidth - 17) * 0.40}px`;
-	//usertab.style.height = `${(window.innerHeight - 17) * 0.40}px`;
-	//usertab.style.top = `${plain.offsetTop + (plain.offsetHeight / 2) - (usertab.offsetHeight / 2)}px`;
-	//usertab.style.left = `${plain.offsetLeft + (plain.offsetWidth / 2) - (usertab.offsetWidth / 2)}px`;
-});
-
-function TargetSize(size) {
 	targetShowcase.style.width = `${size}0px`;
 	targetShowcase.style.height = `${size}0px`;
 }
 
-function TargetAmount(amount) {
+document.getElementById("PlayButton").addEventListener("click", () => { StartGame() });
+
+function StartGame() {
+	const amount = parseInt(document.getElementById("TargetAmount").value);
+
 	if (amount <= 0) {
 		return;
 	}
-	const usertab = document.getElementById("UserTab");
 
-	usertab.style.display = "none";
+	const targetSize = document.getElementById("TargetSize");
+	const userTab = document.getElementById("UserTab");
+	const plain = document.getElementById("Plain");
+
+	userTab.style.display = "none";
 	targetShowcase.display = "none";
 
 	for (var i = 0; i < amount; i++) {
-		var TargetClass = new Target(targetSizeValue.value);
+		var TargetClass = new Target(parseInt(targetSize.value));
 		TargetClass.ResetPosition();
 		targetsArray.push(TargetClass);
 	}
@@ -128,6 +88,8 @@ function TargetAmount(amount) {
 }
 
 function Shoot() {
+	const totalShoots = document.getElementById("TotalShoots");
+
 	let currentShoots = parseInt(totalShoots.innerHTML);
 	currentShoots++;
 	totalShoots.innerHTML = currentShoots;
@@ -138,6 +100,8 @@ function Shoot() {
 
 function ShootLand(CurrTarget) {
 	event.stopPropagation();
+	const totalShoots = document.getElementById("TotalShoots");
+	const score = document.getElementById("Score");
 
 	let currentScore = parseInt(score.innerHTML);
 	currentScore++;
@@ -152,6 +116,10 @@ function ShootLand(CurrTarget) {
 }
 
 function MissShoots() {
+	const score = document.getElementById("Score");
+	const totalShoots = document.getElementById("TotalShoots");
+	const missShoots = document.getElementById("MissShoots");
+
 	let currentShoots = parseInt(totalShoots.innerHTML);
 	let currentScore = parseInt(score.innerHTML);
 
@@ -159,10 +127,14 @@ function MissShoots() {
 }
 
 function AccuracyCalculation() {
+	const totalShoots = document.getElementById("TotalShoots");
+	const accuracy = document.getElementById("Accuracy");
+	const score = document.getElementById("Score");
+
 	let currentShoots = parseInt(totalShoots.innerHTML);
 	let currentScore = parseInt(score.innerHTML);
 
-	if (currentShoots == 0) {
+	if (currentShoots === 0) {
 		return;
 	}
 
@@ -176,10 +148,10 @@ function CreaterTarget(size, show) {
 	const targetdiv = document.createElement("div");
 
 	if (show == true) {
-		targetContainer.appendChild(targetdiv);
+		document.getElementById("TargetContainer").appendChild(targetdiv);
 	}
 	else {
-		plain.appendChild(targetdiv);
+		document.getElementById("Plain").appendChild(targetdiv);
 	}
 
 	targetdiv.style.height = `${size}0px`;

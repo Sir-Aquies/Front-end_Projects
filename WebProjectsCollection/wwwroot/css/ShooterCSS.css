@@ -6,6 +6,17 @@ html {
 	height: 100%;
 }
 
+@font-face {
+	font-family: "Pixels";
+	src: url(../Silkscreen/slkscr.ttf);
+}
+
+@font-face {
+	font-family: "Pixels";
+	src: url(../Silkscreen/slkscrb.ttf);
+	font-weight: bold;
+}
+
 body {
 	background-color: black;
 	overflow: hidden;
@@ -28,6 +39,7 @@ body {
 	border-bottom: 0.5vh solid green;
 	font-size: 3vh;
 	color: green;
+	font-family: Pixels;
 }
 
 .plain {
@@ -45,7 +57,6 @@ body {
 	height: 50%;
 	border: 0.5vh solid green;
 	position: absolute;
-	/*border-radius: 1%/1%;*/
 	color: green;
 	display: flex;
 	justify-content: center;
@@ -57,13 +68,14 @@ input, #TargetContainer {
 	background-color: transparent;
 	color: green;
 	font-size: 4vh;
-	/*border-radius: 10%/10%;*/
 	border: 0.5vh solid green;
 	margin: 0.3vh;
+	font-family: Pixels;
 }
 
 label {
 	font-size: 4vh;
+	font-family: Pixels;
 }
 
 #TargetAmount {
