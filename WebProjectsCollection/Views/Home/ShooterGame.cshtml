@@ -11,15 +11,16 @@
 		<span>Score: <span id="Score">0</span></span>
 		<span>Miss Shoots: <span id="MissShoots">0</span></span>
 		<span>Accuracy: <span id="Accuracy">0%</span></span>
+		<input type="button" value="Reset" id="ResetBtn" style="display: none" onclick="EndGame()" class="normal-btn"/>
 	</div>
 
 	<div id="Plain" class="plain">
-		<div id="UserTab" class="user-tab">
+		<div id="UserTab" class="user-tab" onmousedown="event.stopPropagation()">
 			<div class="target-container">
 				<label>Amount</label>
-				<input id="TargetAmount" type="number" value="0" />
+				<input id="TargetAmount" type="number" value="5" />
 				<label>Size</label>
-				<input id="TargetSize" type="number" value="1" min="1" max="15" />
+				<input id="TargetSize" type="number" value="5" min="1" max="15" />
 			</div>
 
 			<div id="TargetContainer"></div>

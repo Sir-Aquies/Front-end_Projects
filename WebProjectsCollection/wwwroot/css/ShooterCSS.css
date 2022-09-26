@@ -28,28 +28,36 @@ body {
 	width: 100%;
 	height: 100%;
 	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 .score-tab {
-	position: absolute;
+	position: relative;
 	display: flex;
 	justify-content: space-around;
-	align-self: flex-start;
 	width: 100%;
-	border-bottom: 0.5vh solid green;
+	border: 0.5vh solid green;
+	border-bottom: none;
 	font-size: 3vh;
 	color: green;
 	font-family: Pixels;
 }
 
+.normal-btn {
+	font-size: 2.5vh;
+	border: 0.2vh solid green;
+}
+
 .plain {
 	display: flex;
+	flex: 1 1 auto;
 	justify-content: center;
 	align-items: center;
 	position: relative;
 	width: 100%;
-	height: 100%;
 	border: 0.5vh solid green;
+	overflow: hidden;
 }
 
 .user-tab {

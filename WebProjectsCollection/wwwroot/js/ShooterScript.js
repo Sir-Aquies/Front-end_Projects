@@ -12,21 +12,8 @@ class Target {
 	ResetPosition() {
 		const plain = document.getElementById("Plain");
 
-		//Set the absolute width and height of the plain.
-		plain.offsetRight = plain.offsetLeft + plain.offsetWidth;
-		plain.offsetBottom = plain.offsetTop + plain.offsetHeight;
-
-		//Ramdomize the position of the target using minimum (width/height of the target) and maximun (right/bottom of the plain).
-		let target_x = Math.floor(Math.random() * (plain.offsetRight - parseInt(this.target.style.width))) + parseInt(this.target.style.width);
-		let target_y = Math.floor(Math.random() * (plain.offsetBottom - parseInt(this.target.style.height))) + parseInt(this.target.style.height);
-
-		//if the target left/top position plus the his width/height is higher than the plain the width/height of the target is subtracted.
-		if (target_x + parseInt(this.target.style.width) >= plain.offsetRight) {
-			target_x -= parseInt(this.target.style.width);
-		}
-		if ((target_y + parseInt(this.target.style.height)) >= plain.offsetBottom) {
-			target_y -= parseInt(this.target.style.height);
-		}
+		let target_x = Math.floor(Math.random() * (plain.offsetWidth - this.target.offsetWidth));
+		let target_y = Math.floor(Math.random() * (plain.offsetHeight - this.target.offsetHeight));
 
 		this.target.style.left = `${ target_x }px`;
 		this.target.style.top = `${ target_y }px`;
@@ -44,7 +31,7 @@ class Target {
 }
 
 //Create a target that will work as a showcase for the size of all the targets.
-const targetShowcase = CreaterTarget(1, true);
+const targetShowcase = CreaterTarget(5, true);
 
 //Every time the value of TargetSize changes we modify the size of the showcase.
 document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize() });
@@ -55,6 +42,11 @@ function TargetShowcaseSize() {
 
 	if (size > 15) {
 		targetSize.value = 15;
+		return;
+	}
+
+	if (size < 1) {
+		targetSize.value = 1;
 		return;
 	}
 
@@ -72,9 +64,11 @@ function StartGame() {
 	}
 
 	const targetSize = document.getElementById("TargetSize");
+	const resetBtn = document.getElementById("ResetBtn");
 	const userTab = document.getElementById("UserTab");
 	const plain = document.getElementById("Plain");
 
+	resetBtn.style.display = "block";
 	userTab.style.display = "none";
 	targetShowcase.display = "none";
 
@@ -84,7 +78,37 @@ function StartGame() {
 		targetsArray.push(TargetClass);
 	}
 
-	plain.addEventListener("mousedown", () => { Shoot() });
+	plain.addEventListener("mousedown", Shoot);
+}
+
+function EndGame() {
+	if (targetsArray.length !== 0) {
+		const totalShoots = document.getElementById("TotalShoots");
+		const missShoots = document.getElementById("MissShoots");
+		const accuracy = document.getElementById("Accuracy");
+		const resetBtn = document.getElementById("ResetBtn");
+		const userTab = document.getElementById("UserTab");
+		const plain = document.getElementById("Plain");
+		const score = document.getElementById("Score");
+		
+		totalShoots.innerHTML = 0;
+		missShoots.innerHTML = 0;
+		score.innerHTML = 0;
+		amount = 0;
+		accuracy.innerHTML = "0%";
+
+		resetBtn.style.display = "none";
+		userTab.style.display = "flex";
+		targetShowcase.display = "block";
+
+		while (targetsArray.length !== 0) {
+			targetsArray[0].target.remove();
+			targetsArray.shift();
+		}
+
+		plain.removeEventListener("mousedown", Shoot);
+	}
+
 }
 
 function Shoot() {
@@ -161,5 +185,6 @@ function CreaterTarget(size, show) {
 	targetdiv.style.borderRadius = "50%";
 	targetdiv.id = `target_${amount}`;
 	amount++;
+
 	return targetdiv;
 }
