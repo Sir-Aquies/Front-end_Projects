@@ -1,5 +1,6 @@
 ﻿* {
 	box-sizing: border-box;
+	cursor: url(../images/cursor.png), auto;
 }
 
 html {
@@ -62,14 +63,11 @@ body {
 
 .user-tab {
 	width: 50%;
-	height: 50%;
+	height: fit-content;
 	border: 0.5vh solid green;
 	position: absolute;
 	color: green;
-	display: flex;
-	justify-content: center;
-	align-content: center;
-	flex-wrap: wrap;
+	padding: 1vh 0;
 }
 
 input, #TargetContainer {
@@ -86,9 +84,56 @@ label {
 	font-family: Pixels;
 }
 
-#TargetAmount {
+.upper-container {
+	width: 100%;
+	position: relative;
+	display: flex;
+}
+
+#TargetContainer {
+	width: 50%;
+	margin: 0;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.target-options {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.target-options input {
 	width: 80%;
 	height: fit-content;
+}
+
+.target-options * {
+	margin: 0 auto;
+}
+
+.lower-container {
+	position: relative;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 1vh;
+}
+
+.input-container-right {
+	width: fit-content;
+	position: absolute;
+	right: 0;
+}
+
+.input-container-right label, input[type=checkbox] {
+	font-size: 2vh;
+	height: fit-content;
+	position: relative;
 }
 
 #TargetAmount:focus {
@@ -96,45 +141,45 @@ label {
 	box-shadow: 0px 0px 35px green;
 }
 
-#TargetSize {
-	width: 80%;
-	height: fit-content;
-}
-
 #TargetSize:focus {
 	outline: 3px solid green;
 	box-shadow: 0px 0px 35px green;
 }
 
-#SetButton {
-	width: 35%;
-	height: fit-content;
-	margin-top: 1vh;
-	font-size: 5vh;
-	padding: 0.5vh;
-}
-
-#SetButton:hover {
+#PlayButton:hover {
 	box-shadow: 0px 0px 35px green;
 }
 
-#TargetContainer {
-	width: 50%;
-	height: 60%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+input[type=range] {
+	-webkit-appearance: none;
+	border-radius: 5px;
+	height: 1.5vh;
+	background: darkgreen;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	border: 0;
+	transition: opacity .2s;
 }
 
-.target-container {
-	width: 40%;
-	height: 60%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-right: 0.2vh;
+input[type=range]:hover {
+	opacity: 1;
 }
 
-.target-container * {
-	margin: 0 auto;
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 2.5vh;
+	height: 2.5vh;
+	border-radius: 50%;
+	background: green;
+	cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: green;
+	cursor: pointer;
 }

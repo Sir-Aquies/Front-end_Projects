@@ -16,17 +16,47 @@
 
 	<div id="Plain" class="plain">
 		<div id="UserTab" class="user-tab" onmousedown="event.stopPropagation()">
-			<div class="target-container">
-				<label>Amount</label>
-				<input id="TargetAmount" type="number" value="5" />
-				<label>Size</label>
-				<input id="TargetSize" type="number" value="5" min="1" max="15" />
-			</div>
+			<div class="upper-container">
+				<div class="target-options">
+					<label>Amount</label>
+					<input id="TargetAmount" type="number" value="5" />
 
-			<div id="TargetContainer"></div>
-			<input type="button" id="PlayButton" value="Play" />
+					<label>Size</label>
+					<input id="TargetSize" type="number" value="5" min="1" max="15" />
+
+					<label id="TargetSpeedLabel" style="display: none">Speed</label>
+					<input id="TargetSpeed" type="range" min="3" max="12" style="display: none;" />
+				</div>
+
+				<div id="TargetContainer"></div>
+			</div>
+			
+
+			<div class="lower-container">
+				<input type="button" id="PlayButton" value="Play" />
+
+				<div class="input-container-right">
+					<input type="checkbox" id="BounceBool" value="1" onclick="ToggleOptions()" />
+					<label for="BounceBool">Bouncing target</label>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script src="~/js/ShooterScript.js" asp-append-version="true"></script>
+<script>
+	function ToggleOptions() {
+		const label = document.getElementById("TargetSpeedLabel");
+		const input = document.getElementById("TargetSpeed");
+
+		if (label.style.display === "none") {
+			label.style.display = "block";
+			input.style.display = "block";
+		} 
+		else {
+			label.style.display = "none";
+			input.style.display = "none";
+		}
+	}
+</script>

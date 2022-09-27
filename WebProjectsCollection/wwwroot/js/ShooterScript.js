@@ -64,10 +64,11 @@ function StartGame() {
 	}
 
 	const targetSize = document.getElementById("TargetSize");
+	const bounceBool = document.getElementById("BounceBool");
 	const resetBtn = document.getElementById("ResetBtn");
 	const userTab = document.getElementById("UserTab");
 	const plain = document.getElementById("Plain");
-
+	
 	resetBtn.style.display = "block";
 	userTab.style.display = "none";
 	targetShowcase.display = "none";
@@ -75,6 +76,40 @@ function StartGame() {
 	for (var i = 0; i < amount; i++) {
 		var TargetClass = new Target(parseInt(targetSize.value));
 		TargetClass.ResetPosition();
+
+		if (bounceBool.checked) {
+			const speed = document.getElementById("TargetSpeed");
+
+			let tgt = TargetClass.target;
+			tgt.dx = parseInt(speed.value);
+			tgt.dy = parseInt(speed.value);
+			tgt.bounce = setInterval(function () {
+				let x = parseInt(tgt.style.left);
+				x += tgt.dx;
+				tgt.style.left = `${x}px`;
+
+				let y = parseInt(tgt.style.top);
+				y += tgt.dy;
+				tgt.style.top = `${y}px`;
+
+				if (x >= (plain.offsetWidth - tgt.clientWidth)) {
+					tgt.dx = -tgt.dx;
+				}
+
+				if (x <= 0) {
+					tgt.dx = -tgt.dx;
+				}
+
+				if (y >= (plain.offsetHeight - tgt.clientHeight)) {
+					tgt.dy = -tgt.dy;
+				}
+
+				if (y <= 0) {
+					tgt.dy = -tgt.dy;
+				}
+			}, 20);
+		}
+
 		targetsArray.push(TargetClass);
 	}
 
@@ -98,7 +133,7 @@ function EndGame() {
 		accuracy.innerHTML = "0%";
 
 		resetBtn.style.display = "none";
-		userTab.style.display = "flex";
+		userTab.style.display = "block";
 		targetShowcase.display = "block";
 
 		while (targetsArray.length !== 0) {
