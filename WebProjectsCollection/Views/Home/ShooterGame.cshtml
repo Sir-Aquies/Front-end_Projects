@@ -36,8 +36,15 @@
 				<input type="button" id="PlayButton" value="Play" />
 
 				<div class="input-container-right">
-					<input type="checkbox" id="BounceBool" value="1" onclick="ToggleOptions()" />
-					<label for="BounceBool">Bouncing target</label>
+					<div>
+						<input type="checkbox" id="RandomBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
+						<label for="RandomBool">Randomize movement</label>
+					</div>
+					
+					<div>
+						<input type="checkbox" id="BounceBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
+						<label for="BounceBool">Bouncing target</label>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -45,12 +52,30 @@
 </div>
 
 <script src="~/js/ShooterScript.js" asp-append-version="true"></script>
+
 <script>
+	function ToogleCheckbox(box) {
+		const randomBool = document.getElementById("RandomBool");
+		const bounceBool = document.getElementById("BounceBool");
+
+		if (box.id === randomBool.id && box.checked) {
+			bounceBool.checked = false;
+		} 
+		else if (box.id === bounceBool.id && box.checked) {
+			randomBool.checked = false;
+		}
+
+
+	}
+
 	function ToggleOptions() {
 		const label = document.getElementById("TargetSpeedLabel");
 		const input = document.getElementById("TargetSpeed");
 
-		if (label.style.display === "none") {
+		const randomBool = document.getElementById("RandomBool");
+		const bounceBool = document.getElementById("BounceBool");
+
+		if (randomBool.checked || bounceBool.checked) {
 			label.style.display = "block";
 			input.style.display = "block";
 		} 

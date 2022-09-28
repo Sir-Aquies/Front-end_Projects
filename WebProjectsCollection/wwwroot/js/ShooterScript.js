@@ -65,6 +65,7 @@ function StartGame() {
 
 	const targetSize = document.getElementById("TargetSize");
 	const bounceBool = document.getElementById("BounceBool");
+	const randomBool = document.getElementById("RandomBool");
 	const resetBtn = document.getElementById("ResetBtn");
 	const userTab = document.getElementById("UserTab");
 	const plain = document.getElementById("Plain");
@@ -83,6 +84,7 @@ function StartGame() {
 			let tgt = TargetClass.target;
 			tgt.dx = parseInt(speed.value);
 			tgt.dy = parseInt(speed.value);
+
 			tgt.bounce = setInterval(function () {
 				let x = parseInt(tgt.style.left);
 				x += tgt.dx;
@@ -108,6 +110,56 @@ function StartGame() {
 					tgt.dy = -tgt.dy;
 				}
 			}, 20);
+		}
+
+		if (randomBool.checked) {
+			const speed = document.getElementById("TargetSpeed");
+
+			let tgt = TargetClass.target;
+			tgt.dx = parseInt(speed.value);
+			tgt.dy = parseInt(speed.value);
+
+			tgt.random = setInterval(function () {
+				let x = parseInt(tgt.style.left);
+				x += tgt.dx;
+				tgt.style.left = `${x}px`;
+
+				let y = parseInt(tgt.style.top);
+				y += tgt.dy;
+				tgt.style.top = `${y}px`;
+
+
+				if (x >= (plain.offsetWidth - tgt.clientWidth)) {
+					tgt.dx = -tgt.dx;
+				}
+
+				if (x <= 0) {
+					tgt.dx = -tgt.dx;
+				}
+
+				if (y >= (plain.offsetHeight - tgt.clientHeight)) {
+					tgt.dy = -tgt.dy;
+				}
+
+				if (y <= 0) {
+					tgt.dy = -tgt.dy;
+				}
+
+			}, 20);
+
+			tgt.randomize = setInterval(function () {
+				let newDx = Math.floor(Math.random() * 2);
+				let newDy = Math.floor(Math.random() * 2);
+
+				if (newDx === 1) {
+					tgt.dx = -tgt.dx;
+				}
+
+				if (newDy === 1) {
+					tgt.dy = -tgt.dy;
+				}
+
+			}, 1000);
 		}
 
 		targetsArray.push(TargetClass);

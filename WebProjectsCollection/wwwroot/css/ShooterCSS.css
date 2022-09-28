@@ -1,6 +1,6 @@
 ﻿* {
 	box-sizing: border-box;
-	cursor: url(../images/cursor.png), auto;
+	/*cursor: url(../images/cursor.png), auto;*/
 }
 
 html {
@@ -125,6 +125,8 @@ label {
 }
 
 .input-container-right {
+	display: flex;
+	flex-direction: column;
 	width: fit-content;
 	position: absolute;
 	right: 0;
