@@ -1,55 +1,142 @@
 ﻿* {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .RainbowDVD {
-    animation-name: rainbow;
-    animation-duration: 10s;
-    animation-iteration-count: infinite;
-    animation-fill-mode: both;
-    position: absolute;
-    width: 100px;
-    height: 60px;
+	animation-name: rainbow;
+	animation-duration: 10s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: both;
+	position: absolute;
+	width: 100px;
+	height: 60px;
 }
 
 .mask1 {
-    mask-image: url(../images/DVDLogo.png);
-    mask-repeat: no-repeat;
-    mask-size: 100px 60px;
-    mask-position: 0px;
-    -webkit-mask-image: url(../images/DVDLogo.png);
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: 100px 60px;
-    -webkit-mask-position: 0px;
+	mask-image: url(../images/DVDLogo.png);
+	mask-repeat: no-repeat;
+	mask-size: 100px 60px;
+	mask-position: 0px;
+	-webkit-mask-image: url(../images/DVDLogo.png);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: 100px 60px;
+	-webkit-mask-position: 0px;
 }
 
-.NormalBtn {
+.direction-selector {
+	border-radius: 50%;
+	position: absolute;
+	width: 20vh;
+	height: 20vh;
+	display: none;
+	flex-direction: column;
+	background-color: rgba(10, 10 ,10, 0.6);
+	overflow: clip;
+}
 
+.direction-selector div{
+	width: 100%;
+	position: relative;
+	z-index: 10;
+}
+
+/*Upper Selector*/
+
+.upper-selector {
+	background-color: red;
+	height: 35%;
+	display: flex;
+}
+
+.upper-selector div {
+	width: 33.3%;
+	height: 100%;
+}
+
+.upper-selector-right {
+	background-color: darkred;
+}
+
+.upper-selector-center {
+	background-color: indianred;
+}
+
+.upper-selector-left {
+	background-color: palevioletred;
+}
+
+/*Middle Selector*/
+
+.middle-selector {
+	background-color: blue;
+	height: 30%;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.middle-selector div {
+	height: 100%;
+	width: 33.3%;
+	position: relative;
+}
+
+.middle-selector-right {
+	background-color: darkblue;
+}
+
+.midlle-selector-left {
+	background-color: red;
+	margin-left: auto;
+}
+
+/*Lower Selector*/
+
+.lower-selector {
+	background-color: green;
+	height: 35%;
+	display: flex;
+}
+
+.lower-selector div {
+	width: 33.3%;
+	height: 100%;
+}
+
+.lower-selector-right {
+	background-color: darkgreen;
+}
+
+.lower-selector-center {
+	background-color: seagreen;
+}
+
+.lower-selector-left {
+	background-color: greenyellow;
 }
 
 @keyframes rainbow {
-    0% {
-        background-color: rgb(255, 0, 0);
-    }
-    14.2% {
-        background-color: rgb(255, 165, 0);
-    }
-    28.4% {
-        background-color: rgb(255, 255, 0);
-    }
-    42.6% {
-        background-color: rgb(0, 128, 0);
-    }
-    56.8% {
-        background-color: rgb(0, 0, 255);
-    }
-    71.2% {
-        background-color: rgb(75, 0, 130);
-    }
-    85.4% {
-        background-color: rgb(238, 130, 238);
-    }
-    100% {
-        background-color: rgb(255, 0, 0);
-    }
+	0% {
+		background-color: rgb(255, 0, 0);
+	}
+	14.2% {
+		background-color: rgb(255, 165, 0);
+	}
+	28.4% {
+		background-color: rgb(255, 255, 0);
+	}
+	42.6% {
+		background-color: rgb(0, 128, 0);
+	}
+	56.8% {
+		background-color: rgb(0, 0, 255);
+	}
+	71.2% {
+		background-color: rgb(75, 0, 130);
+	}
+	85.4% {
+		background-color: rgb(238, 130, 238);
+	}
+	100% {
+		background-color: rgb(255, 0, 0);
+	}
 }

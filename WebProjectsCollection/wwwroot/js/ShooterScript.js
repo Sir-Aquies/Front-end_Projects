@@ -78,7 +78,7 @@ function StartGame() {
 		var TargetClass = new Target(parseInt(targetSize.value));
 		TargetClass.ResetPosition();
 
-		if (bounceBool.checked) {
+		if (bounceBool.checked || randomBool.checked) {
 			const speed = document.getElementById("TargetSpeed");
 
 			let tgt = TargetClass.target;
@@ -110,56 +110,22 @@ function StartGame() {
 					tgt.dy = -tgt.dy;
 				}
 			}, 20);
-		}
 
-		if (randomBool.checked) {
-			const speed = document.getElementById("TargetSpeed");
+			if (randomBool.checked) {
+				tgt.randomize = setInterval(function () {
+					let newDx = Math.floor(Math.random() * 2);
+					let newDy = Math.floor(Math.random() * 2);
 
-			let tgt = TargetClass.target;
-			tgt.dx = parseInt(speed.value);
-			tgt.dy = parseInt(speed.value);
+					if (newDx === 1) {
+						tgt.dx = -tgt.dx;
+					}
 
-			tgt.random = setInterval(function () {
-				let x = parseInt(tgt.style.left);
-				x += tgt.dx;
-				tgt.style.left = `${x}px`;
+					if (newDy === 1) {
+						tgt.dy = -tgt.dy;
+					}
 
-				let y = parseInt(tgt.style.top);
-				y += tgt.dy;
-				tgt.style.top = `${y}px`;
-
-
-				if (x >= (plain.offsetWidth - tgt.clientWidth)) {
-					tgt.dx = -tgt.dx;
-				}
-
-				if (x <= 0) {
-					tgt.dx = -tgt.dx;
-				}
-
-				if (y >= (plain.offsetHeight - tgt.clientHeight)) {
-					tgt.dy = -tgt.dy;
-				}
-
-				if (y <= 0) {
-					tgt.dy = -tgt.dy;
-				}
-
-			}, 20);
-
-			tgt.randomize = setInterval(function () {
-				let newDx = Math.floor(Math.random() * 2);
-				let newDy = Math.floor(Math.random() * 2);
-
-				if (newDx === 1) {
-					tgt.dx = -tgt.dx;
-				}
-
-				if (newDy === 1) {
-					tgt.dy = -tgt.dy;
-				}
-
-			}, 1000);
+				}, 700);
+            }
 		}
 
 		targetsArray.push(TargetClass);

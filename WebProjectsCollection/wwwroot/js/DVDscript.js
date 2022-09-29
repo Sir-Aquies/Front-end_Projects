@@ -1,7 +1,15 @@
 ﻿var id = 0;
 const divArray = [];
 
-document.addEventListener("click", function (e) {
+document.addEventListener("mousedown", function (e) {
+	const ds = document.getElementById("DirectionSelector");
+	ds.style.display = "flex";
+
+	ds.style.left = `${parseInt(e.clientX) - (ds.clientWidth / 2)}px`;
+	ds.style.top = `${parseInt(e.clientY) - (ds.clientHeight / 2)}px`;
+});
+
+document.addEventListener("mouseup", function (e) {
 	CreateDVD(e.clientX, e.clientY);
 });
 
@@ -12,12 +20,12 @@ function CreateDVD(posx, posy) {
 	div.lastCollide = null;
 	document.body.appendChild(div);
 	divArray.push(div);
-	vx = 2;
-	vy = 2;
+	vx = 5;
+	vy = 5;
 
 	div.addEventListener("click", function () {
 		event.stopPropagation();
-    });
+	});
 
 	//Ramdomize the initial direction
 	var dxRng = Math.floor(Math.random() * 2);
@@ -48,47 +56,48 @@ function CreateDVD(posx, posy) {
 
 	//The function that makes the div bounce
 	div.bounce = setInterval(function () {
-		for (const x of divArray) {
-			if (div !== x && div.lastCollide != x) {
-				if (Collide(div, x)) {
-					if ((div.dy !== x.dy) && div.dx === x.dx) {
-						div.dy = -div.dy;
-						x.dy = -x.dy;
 
-						div.lastCollide = x;
-						continue;
-					}
+		//for (const x of divArray) {
+		//	if (div !== x && div.lastCollide != x) {
+		//		if (Collide(div, x)) {
+		//			if ((div.dy !== x.dy) && div.dx === x.dx) {
+		//				div.dy = -div.dy;
+		//				x.dy = -x.dy;
 
-					if ((div.dy !== x.dy) && div.dx !== x.dx) {
-						div.dy = -div.dy;
-						x.dy = -x.dy;
-						div.dx = -div.dx;
-						x.dx = -x.dx;
+		//				div.lastCollide = x;
+		//				continue;
+		//			}
 
-						div.lastCollide = x;
-						continue;
-					}
+		//			if ((div.dy !== x.dy) && div.dx !== x.dx) {
+		//				div.dy = -div.dy;
+		//				x.dy = -x.dy;
+		//				div.dx = -div.dx;
+		//				x.dx = -x.dx;
 
-					if ((div.dy === x.dy) && div.dx === x.dx) {
-						div.dx = -div.dx;
-						x.dy = -x.dy;
-						x.dx = -x.dx;
+		//				div.lastCollide = x;
+		//				continue;
+		//			}
 
-						div.lastCollide = x;
-						continue;
-					}
+		//			if ((div.dy === x.dy) && div.dx === x.dx) {
+		//				div.dx = -div.dx;
+		//				x.dy = -x.dy;
+		//				x.dx = -x.dx;
 
-					if ((div.dy === x.dy) && div.dx !== x.dx) {
-						div.dx = -div.dx;
-						x.dx = -x.dx;
+		//				div.lastCollide = x;
+		//				continue;
+		//			}
 
-						div.lastCollide = x;
-						continue;
-					}
-				}
-			}
-		}
-		div.lastCollide = null;
+		//			if ((div.dy === x.dy) && div.dx !== x.dx) {
+		//				div.dx = -div.dx;
+		//				x.dx = -x.dx;
+
+		//				div.lastCollide = x;
+		//				continue;
+		//			}
+		//		}
+		//	}
+		//}
+		//div.lastCollide = null;
 
 		let x = parseInt(div.style.left);
 		x += div.dx;
@@ -114,18 +123,10 @@ function CreateDVD(posx, posy) {
 			div.dy = -div.dy;
 		}
 
-	}, 10);
+	}, 30);
+
+	document.getElementById("DirectionSelector").style.display = "none";
 };
-
-//if ((div.offsetLeft + div.offsetWidth) > x.offsetLeft || div.offsetLeft < (x.offsetLeft + x.offsetWidth)) {
-//	div.dx = -div.dx;
-//	div.lastCollide = x;
-//}
-
-//if ((div.offsetTop + div.offsetHeight) > x.offsetTop || div.offsetTop < (x.offsetTop + x.offsetHeight)) {
-//	div.dy = -div.dy;
-//	div.lastCollide = x;
-//}
 
 function Collide(el1, el2) {
 	el1.offsetBottom = el1.offsetTop + el1.offsetHeight;
