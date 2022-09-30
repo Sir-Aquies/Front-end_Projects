@@ -26,24 +26,37 @@
 .direction-selector {
 	border-radius: 50%;
 	position: absolute;
-	width: 20vh;
-	height: 20vh;
+	width: 30vh;
+	height: 30vh;
 	display: none;
 	flex-direction: column;
-	background-color: rgba(10, 10 ,10, 0.6);
+	/*background-color: rgb(10, 10, 10);*/
 	overflow: clip;
+	border: 1px solid white;
 }
 
-.direction-selector div{
+.blackpit-center {
+	position: absolute;
+	background-color: black;
+	/*background-color: rgb(10, 10, 10);*/
+	width: 17vh;
+	height: 17vh;
+	border-radius: 50%;
+	z-index: 50;
+	display: none;
+	border: 1px solid white;
+}
+
+.direction-selector > div{
 	width: 100%;
 	position: relative;
 	z-index: 10;
+	height: 33.33% !important;
 }
 
 /*Upper Selector*/
 
 .upper-selector {
-	background-color: red;
 	height: 35%;
 	display: flex;
 }
@@ -51,48 +64,91 @@
 .upper-selector div {
 	width: 33.3%;
 	height: 100%;
-}
-
-.upper-selector-right {
-	background-color: darkred;
-}
-
-.upper-selector-center {
-	background-color: indianred;
+	border: 1px solid white;
 }
 
 .upper-selector-left {
-	background-color: palevioletred;
+}
+
+.upper-selector-left div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(-135deg) translate(-40%, 0);
+	border: none;
+}
+
+.upper-selector-center {
+	border-top: none;
+}
+
+.upper-selector-center div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(-90deg);
+	border: none;
+}
+
+.upper-selector-right {
+}
+
+.upper-selector-right div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(-45deg) translate(-40%, 0);
+	border: none;
 }
 
 /*Middle Selector*/
-
 .middle-selector {
-	background-color: blue;
 	height: 30%;
 	display: flex;
-	justify-content: flex-start;
 }
 
 .middle-selector div {
 	height: 100%;
 	width: 33.3%;
-	position: relative;
+	border: 1px solid white;
+}
+
+.middle-selector-left {
+	border-left: none;
+}
+
+.middle-selector-left div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(180deg);
+	border: none;
+}
+
+.middle-selector-center {
+
 }
 
 .middle-selector-right {
-	background-color: darkblue;
-}
-
-.midlle-selector-left {
-	background-color: red;
-	margin-left: auto;
+	border-right: none;
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	border: none;
 }
 
 /*Lower Selector*/
 
 .lower-selector {
-	background-color: green;
 	height: 35%;
 	display: flex;
 }
@@ -100,18 +156,47 @@
 .lower-selector div {
 	width: 33.3%;
 	height: 100%;
+	border: 1px solid white;
 }
 
 .lower-selector-right {
-	background-color: darkgreen;
+}
+
+.lower-selector-right div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(45deg) translate(-40%, 0);
+	border: none;
 }
 
 .lower-selector-center {
-	background-color: seagreen;
+	border-bottom: none;
+}
+
+.lower-selector-center div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(90deg);
+	border: none;
 }
 
 .lower-selector-left {
-	background-color: greenyellow;
+}
+
+.lower-selector-left div {
+	background-image: url(../images/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	position: absolute;
+	transform: rotate(135deg) translate(-40%, 0);
+	border: none;
 }
 
 @keyframes rainbow {

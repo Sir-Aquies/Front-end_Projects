@@ -21,23 +21,26 @@
 	}
 </style>
 
-<div class="direction-selector" id="DirectionSelector">
+<div class="direction-selector" id="DirectionSelector" onmousedown="event.stopPropagation()">
 	<div class="upper-selector">
-		<div class="upper-selector-right"></div>
-		<div class="upper-selector-center"></div>
-		<div class="upper-selector-left"></div>
+		<div id="upperLeft" class="upper-selector-left"><div></div></div>
+		<div id="upperCenter" class="upper-selector-center"><div></div></div>
+		<div id="upperRight" class="upper-selector-right"><div></div></div>
 	</div>
 
 	<div class="middle-selector">
-		<div class="middle-selector-right"></div>
-		<div class="middle-selector-left"></div>
+		<div id="middleLeft" class="middle-selector-left"><div></div></div>
+		<div id="middleCenter" class="middle-selector-center"></div>
+		<div id="middleRight" class="middle-selector-right"></div>
 	</div>
 
 	<div class="lower-selector">
-		<div class="lower-selector-right"></div>
-		<div class="lower-selector-center"></div>
-		<div class="lower-selector-left"></div>
+		<div id="lowerLeft" class="lower-selector-left"><div></div></div>
+		<div id="lowerCenter" class="lower-selector-center"><div></div></div>
+		<div id="lowerRight" class="lower-selector-right"><div></div></div>
 	</div>
 </div>
+
+<div class="blackpit-center" id="BlackPit" draggable="false"></div>
 
 <script src="~/js/DVDscript.js" asp-append-version="true"></script>
