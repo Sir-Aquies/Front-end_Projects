@@ -4,24 +4,7 @@
 
 <link rel="stylesheet" asp-append-version="true" href="~/css/AnimationsStyleSheet.css"/>
 
-<style>
-	body {
-		overflow: hidden;
-		background-color: black;
-	}
-
-	.navbar {
-		background-color: black !important;
-		border-color: gray !important;
-	}
-
-	.navbar * {
-		background-color: black !important;
-		color: white  !important;
-	}
-</style>
-
-<div class="direction-selector" id="DirectionSelector" onmousedown="event.stopPropagation()">
+<div class="direction-selector" id="DirectionSelector" onmousedown="event.stopPropagation()" ondragstart="event.preventDefault();">
 	<div class="upper-selector">
 		<div id="upperLeft" class="upper-selector-left"><div></div></div>
 		<div id="upperCenter" class="upper-selector-center"><div></div></div>
@@ -41,6 +24,6 @@
 	</div>
 </div>
 
-<div class="blackpit-center" id="BlackPit" draggable="false"></div>
+<div class="blackpit-center" id="BlackPit" ondragstart="event.preventDefault();"></div>
 
 <script src="~/js/DVDscript.js" asp-append-version="true"></script>

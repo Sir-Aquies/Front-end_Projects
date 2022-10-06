@@ -1,5 +1,28 @@
 ﻿* {
 	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+body {
+	overflow: hidden;
+	background-color: black;
+}
+
+.navbar {
+	background-color: black !important;
+	border-color: gray !important;
+}
+
+.navbar * {
+	background-color: black !important;
+	color: white !important;
+}
+
+:root {
+	--background-color: rgba(26, 26, 26, 0.5);
+	--hover-color: rgba(166, 166, 166, 0.5);
+	--border-div: 1px solid black;
 }
 
 .RainbowDVD {
@@ -30,44 +53,41 @@
 	height: 30vh;
 	display: none;
 	flex-direction: column;
-	/*background-color: rgb(10, 10, 10);*/
 	overflow: clip;
-	border: 1px solid white;
 }
 
 .blackpit-center {
 	position: absolute;
-	background-color: black;
-	/*background-color: rgb(10, 10, 10);*/
-	width: 17vh;
-	height: 17vh;
+	background-color: transparent;
+	width: 9.5vh;
+	height: 9.5vh;
 	border-radius: 50%;
-	z-index: 50;
+	z-index: 20;
 	display: none;
-	border: 1px solid white;
+	outline: 3vh solid black;
 }
 
-.direction-selector > div{
+.direction-selector > div {
 	width: 100%;
 	position: relative;
 	z-index: 10;
-	height: 33.33% !important;
-}
-
-/*Upper Selector*/
-
-.upper-selector {
-	height: 35%;
+	height: 33.33%;
 	display: flex;
 }
 
+/*Upper Selector*/
 .upper-selector div {
 	width: 33.3%;
 	height: 100%;
-	border: 1px solid white;
+	border: var(--border-div);
 }
 
-.upper-selector-left {
+.upper-selector > div {
+	background-color: var(--background-color);
+}
+
+.upper-selector > div:hover {
+	background-color: var(--hover-color);
 }
 
 .upper-selector-left div {
@@ -94,9 +114,6 @@
 	border: none;
 }
 
-.upper-selector-right {
-}
-
 .upper-selector-right div {
 	background-image: url(../images/arrow.png);
 	background-repeat: no-repeat;
@@ -108,15 +125,18 @@
 }
 
 /*Middle Selector*/
-.middle-selector {
-	height: 30%;
-	display: flex;
-}
-
 .middle-selector div {
 	height: 100%;
 	width: 33.3%;
-	border: 1px solid white;
+	border: var(--border-div);
+}
+
+.middle-selector > div {
+	background-color: var(--background-color);
+}
+
+.middle-selector > div:hover {
+	background-color: var(--hover-color);
 }
 
 .middle-selector-left {
@@ -134,7 +154,7 @@
 }
 
 .middle-selector-center {
-
+	background-color: transparent !important;
 }
 
 .middle-selector-right {
@@ -147,19 +167,18 @@
 }
 
 /*Lower Selector*/
-
-.lower-selector {
-	height: 35%;
-	display: flex;
-}
-
-.lower-selector div {
+.lower-selector  div {
 	width: 33.3%;
 	height: 100%;
-	border: 1px solid white;
+	border: var(--border-div);
 }
 
-.lower-selector-right {
+.lower-selector > div {
+	background-color: var(--background-color);
+}
+
+.lower-selector > div:hover {
+	background-color: var(--hover-color);
 }
 
 .lower-selector-right div {
@@ -184,9 +203,6 @@
 	position: absolute;
 	transform: rotate(90deg);
 	border: none;
-}
-
-.lower-selector-left {
 }
 
 .lower-selector-left div {
