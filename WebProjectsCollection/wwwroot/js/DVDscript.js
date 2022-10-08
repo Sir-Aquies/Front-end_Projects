@@ -1,5 +1,7 @@
 ﻿const ds = document.getElementById("DirectionSelector");
 var Vx = Vy = 5;
+divArray = [];
+var dvdCounter = 1;
 
 document.addEventListener("mousedown", function (e) {
 	const timeOut = setTimeout(function () {
@@ -65,11 +67,21 @@ document.getElementById("lowerRight").addEventListener("mouseup", function (e) {
 function CreateDVD(posx, posy, Dx, Dy) {
 	const div = document.createElement("div");
 	div.className = "mask1 RainbowDVD";
-	div.lastCollide = null;
+	div.id = `DVD${dvdCounter++}`;
+	div.lastCollide = "";
 	document.body.appendChild(div);
-	
+	divArray.push(div);
+
 	//stop the main event so that a div cannot be spawn on top of another div.
 	div.addEventListener("click", function () {
+		event.stopPropagation();
+	});
+
+	div.addEventListener("mousedown", function () {
+		event.stopPropagation();
+	});
+
+	div.addEventListener("mouseup", function () {
 		event.stopPropagation();
 	});
 
@@ -102,49 +114,27 @@ function CreateDVD(posx, posy, Dx, Dy) {
 
 	//The function that makes the div bounce
 	div.bounce = setInterval(function () {
+		let collided = false;
+		for (const div2 of divArray) {
+			if (div.id === div2.lastCollide) {
+				collided = true;
+				continue;
+			}
+			if (div !== div2 && div.lastCollide !== div2.id) {
+				if (Collide(div, div2)) {
+					CollideHandler(div, div2);
+					div.lastCollide = div2.id;
+					div2.lastCollide = div.id;
+					collided = true;
+				}
+			}
+		}
 
-		//for (const x of divArray) {
-		//	if (div !== x && div.lastCollide != x) {
-		//		if (Collide(div, x)) {
-		//			if ((div.dy !== x.dy) && div.dx === x.dx) {
-		//				div.dy = -div.dy;
-		//				x.dy = -x.dy;
+		if (!collided) {
+			div.lastCollide = "";
+		}
 
-		//				div.lastCollide = x;
-		//				continue;
-		//			}
-
-		//			if ((div.dy !== x.dy) && div.dx !== x.dx) {
-		//				div.dy = -div.dy;
-		//				x.dy = -x.dy;
-		//				div.dx = -div.dx;
-		//				x.dx = -x.dx;
-
-		//				div.lastCollide = x;
-		//				continue;
-		//			}
-
-		//			if ((div.dy === x.dy) && div.dx === x.dx) {
-		//				div.dx = -div.dx;
-		//				x.dy = -x.dy;
-		//				x.dx = -x.dx;
-
-		//				div.lastCollide = x;
-		//				continue;
-		//			}
-
-		//			if ((div.dy === x.dy) && div.dx !== x.dx) {
-		//				div.dx = -div.dx;
-		//				x.dx = -x.dx;
-
-		//				div.lastCollide = x;
-		//				continue;
-		//			}
-		//		}
-		//	}
-		//}
-		//div.lastCollide = null;
-
+		//Continuously change the position of the div.
 		if (div.dx !== 0) {
 			let x = parseInt(div.style.left);
 			x += div.dx;
@@ -157,6 +147,7 @@ function CreateDVD(posx, posy, Dx, Dy) {
 			div.style.top = `${y}px`;
 		}
 
+		//Make sure the div dont leave of the screen.
 		if (div.offsetLeft >= (window.innerWidth - div.clientWidth)) {
 			div.dx = -Vx;
 		}
@@ -178,6 +169,32 @@ function CreateDVD(posx, posy, Dx, Dy) {
 	document.getElementById("DirectionSelector").style.display = "none";
 	document.getElementById("BlackPit").style.display = "none";
 };
+
+function CollideHandler(el1, el2) {
+	if (el1.dx === -el2.dx) {
+		el1.dx = -el1.dx;
+		el2.dx = -el2.dx;
+	}
+	else if (el2.dx !== el1.dx && el1.dx === 0) {
+		el1.dx = el2.dx;
+		el2.dx = -el2.dx;
+	}
+	else if (el1.dx === el2.dx) {
+		el1.dx = -el1.dx;
+	}
+
+	if (el1.dy === -el2.dy) {
+		el1.dy = -el1.dy;
+		el2.dy = -el2.dy;
+	}
+	else if (el2.dy !== el1.dy && el1.dy === 0) {
+		el1.dy = el2.dy;
+		el2.dy = -el2.dy;
+	}
+	else if (el1.dy === el2.dy) {
+		el1.dy = -el1.dy;
+	}
+}
 
 function Collide(el1, el2) {
 	el1.offsetBottom = el1.offsetTop + el1.offsetHeight;
