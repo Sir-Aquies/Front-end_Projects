@@ -5,7 +5,9 @@ document.addEventListener("mousedown", function (e) {
 	const div = DrawDiv(e);
 
 	document.onmouseup = function () {
-		div.gravity(div);
+		for (const div2 of elms) {
+			div2.gravity(div2);
+		}
 		document.onmousemove = function () { };
 		document.onmouseup = function () { };
 	};
@@ -25,12 +27,13 @@ function DrawDiv(e) {
 	div.Yi = e.clientY;
 	div.falling = false;
 	div.grounded = false;
+	div.Dt = 0;
 
 	div.gravity = function (div, ignore) {
 		Gravity(div, ignore);
 	};
 
-	div.ondragstart = event.preventDefault();
+	div.ondragstart = function (event) { event.preventDefault() };
 
 	div.onmousedown = function (e) {
 		event.stopPropagation();
@@ -42,6 +45,18 @@ function DrawDiv(e) {
 		this.style.cursor = "grabbing";
 		this.grabX = this.offsetLeft - e.clientX;
 		this.grabY = this.offsetTop - e.clientY;
+		this.Ix = e.clientX;
+		this.Iy = e.clientY;
+		this.Dt = 0;
+		this.Reset = 0;
+		var setTimer = false;
+		var pause = true;
+
+		this.timer = setInterval(function () {
+			if (!pause) {
+				div.Dt = div.Dt + 0.3;
+			}
+		}, 100);
 
 		for (const div2 of elms) {
 			if (!div2.grounded) {
@@ -56,9 +71,29 @@ function DrawDiv(e) {
 		}
 
 		document.onmousemove = function (e) {
-			div.Vtimer = setInterval();
 			div.style.left = (div.grabX + e.clientX) + "px";
 			div.style.top = (div.grabY + e.clientY) + "px";
+
+			div.Fx = e.clientX;
+			div.Fy = e.clientY;
+			pause = false;
+
+			if (setTimer) {
+				clearTimeout(div.Reset);
+				setTimer = false;
+			}
+
+			if (!setTimer) {
+				div.Reset = setTimeout(function () {
+					div.Ix = e.clientX;
+					div.Iy = e.clientY;
+					div.Dt = 0;
+					pause = true;
+					setTimer = true;
+				}, 200);
+
+				setTimer = true;
+			}
 		};
 	};
 
@@ -84,11 +119,57 @@ function DrawDiv(e) {
 }
 
 function Throwing(div) {
+	clearTimeout(div.Reset);
+	clearInterval(div.timer);
+	clearInterval(div.throw);
 
+	const stopSpeed = 30;
+	const dx = div.Fx - div.Ix;
+	const dy = div.Fy - div.Iy;
+
+	div.Vx = Math.floor(dx / div.Dt);
+	div.Vy = Math.floor(dy / div.Dt);
+
+	div.throw = setInterval(function () {
+		var vx = Math.floor(div.Vx * (10 / 100));
+		var vy = Math.floor(div.Vy * (10 / 100));
+
+		div.Vx -= vx;
+		div.Vy -= vy;
+
+		div.style.left = (div.offsetLeft + vx) + "px";
+		div.style.top = (div.offsetTop + vy) + "px";
+
+		if (dx > 0) {
+			if (vx < stopSpeed) {
+				div.Vx = 0;
+			}
+		}
+		else if (dx < 0) {
+			if (vx > -stopSpeed) {
+				div.Vx = 0;
+			}
+		}
+
+		if (dy < 0) {
+			if (vy > -stopSpeed) {
+				div.Vy = 0;
+			}
+		}
+		else if (dy > 0){
+			if (vy < stopSpeed) {
+				div.Vy = 0;
+			}
+		}
+
+		if (div.Vy === 0 && div.Vx === 0) {
+			clearInterval(div.throw);
+		}
+	}, 10)
 }
 
 function Gravity(div, ignoreDiv) {
-	const g = 9;
+	const g = 20;
 
 	div.stop = setInterval(function () {
 		div.style.top = (div.offsetTop + g) + "px";
@@ -114,9 +195,10 @@ function Gravity(div, ignoreDiv) {
 
 		if (div.offsetTop + div.offsetHeight > window.innerHeight) {
 			div.style.top = (window.innerHeight - div.offsetHeight) + "px";
-			clearInterval(div.stop);
 			div.falling = false;
 			div.grounded = true;
+			clearInterval(div.stop);
+			clearInterval(div.throw);
 		}
 	}, 10)
 }
