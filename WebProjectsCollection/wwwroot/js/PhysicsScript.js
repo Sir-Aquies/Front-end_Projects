@@ -6,11 +6,11 @@ document.addEventListener("mousedown", function (e) {
 
 	document.onmouseup = function () {
 		for (const div2 of elms) {
-			div2.gravity(div2);
+			Gravity(div2);
 		}
 		document.onmousemove = function () { };
 		document.onmouseup = function () { };
-	};
+	}; 
 
 	document.onmousemove = function (e) {
 		SizeDiv(e, div);
@@ -27,89 +27,33 @@ function DrawDiv(e) {
 	div.Yi = e.clientY;
 	div.falling = false;
 	div.grounded = false;
+	div.bouncing = false;
 	div.Dt = 0;
 
-	div.gravity = function (div, ignore) {
-		Gravity(div, ignore);
+	div.ondragstart = function (e) {
+		e.preventDefault()
 	};
 
-	div.ondragstart = function (event) { event.preventDefault() };
+	div.onmousedown = DragDiv;
 
-	div.onmousedown = function (e) {
-		event.stopPropagation();
-
-		if (this.stop) {
-			clearInterval(this.stop);
-		}
-		
-		this.style.cursor = "grabbing";
-		this.grabX = this.offsetLeft - e.clientX;
-		this.grabY = this.offsetTop - e.clientY;
-		this.Ix = e.clientX;
-		this.Iy = e.clientY;
-		this.Dt = 0;
-		this.Reset = 0;
-		var setTimer = false;
-		var pause = true;
-
-		this.timer = setInterval(function () {
-			if (!pause) {
-				div.Dt = div.Dt + 0.3;
-			}
-		}, 100);
-
-		for (const div2 of elms) {
-			if (!div2.grounded) {
-				div2.falling = true;
-			}
-		}
-
-		for (const div2 of elms) {
-			if (this.id !== div2.id) {
-				div2.gravity(div2, this);
-			}
-		}
-
-		document.onmousemove = function (e) {
-			div.style.left = (div.grabX + e.clientX) + "px";
-			div.style.top = (div.grabY + e.clientY) + "px";
-
-			div.Fx = e.clientX;
-			div.Fy = e.clientY;
-			pause = false;
-
-			if (setTimer) {
-				clearTimeout(div.Reset);
-				setTimer = false;
-			}
-
-			if (!setTimer) {
-				div.Reset = setTimeout(function () {
-					div.Ix = e.clientX;
-					div.Iy = e.clientY;
-					div.Dt = 0;
-					pause = true;
-					setTimer = true;
-				}, 200);
-
-				setTimer = true;
-			}
-		};
-	};
-
-	div.onmouseup = function () {
+	div.onmouseup = function (e) {
 		this.style.cursor = "grab";
 		document.onmousemove = function () { };
+		this.Fx = e.clientX;
+		this.Fy = e.clientY;
 		Throwing(this);
 
 		for (const div2 of elms) {
-			div2.gravity(div2);
+			Gravity(div2);
 		}
 	}
 
 	div.ondblclick = function () {
 		elms.delete(div);
 		div.remove();
+		for (const div2 of elms) {
+			Gravity(div2);
+		}
 	};
 
 	elms.add(div);
@@ -118,21 +62,91 @@ function DrawDiv(e) {
 	return div;
 }
 
+function DragDiv(e) {
+	e.stopPropagation();
+	const div = this;
+	this.style.cursor = "grabbing";
+	this.grabX = this.offsetLeft - e.clientX;
+	this.grabY = this.offsetTop - e.clientY;
+	this.Ix = e.clientX;
+	this.Iy = e.clientY;
+	this.Dt = 0;
+	this.Reset = 0;
+	var setTimer = false;
+	var pause = true;
+
+	if (this.stopG) {
+		clearInterval(this.stopG);
+	}
+	if (this.Reset) {
+		clearTimeout(this.Reset);
+	}
+	if (this.timer) {
+		clearInterval(this.timer);
+	}
+	if (this.throw) {
+		clearInterval(this.throw);
+	}
+
+	this.timer = setInterval(async function () {
+		if (!pause) {
+			div.Dt = div.Dt + 0.4;
+		}
+	}, 100);
+
+	for (const div2 of elms) {
+		if (!div2.grounded) {
+			div2.falling = true;
+		}
+	}
+
+	for (const div2 of elms) {
+		if (this.id !== div2.id) {
+			Gravity(div2, this);
+		}
+	}
+
+	document.onmousemove = async function (e) {
+		div.style.left = (div.grabX + e.clientX) + "px";
+		div.style.top = (div.grabY + e.clientY) + "px";
+
+		pause = false;
+
+		if (setTimer) {
+			clearTimeout(div.Reset);
+			setTimer = false;
+		}
+
+		if (!setTimer) {
+			div.Reset = setTimeout(async function () {
+				div.Ix = e.clientX;
+				div.Iy = e.clientY;
+				div.Dt = 0;
+				pause = true;
+				setTimer = true;
+			}, 50);
+
+			setTimer = true;
+		}
+	};
+}
+
 function Throwing(div) {
 	clearTimeout(div.Reset);
 	clearInterval(div.timer);
 	clearInterval(div.throw);
 
-	const stopSpeed = 30;
+	const stopSpeed = 1;
 	const dx = div.Fx - div.Ix;
 	const dy = div.Fy - div.Iy;
 
+	div.bouncing = true;
 	div.Vx = Math.floor(dx / div.Dt);
 	div.Vy = Math.floor(dy / div.Dt);
 
-	div.throw = setInterval(function () {
-		var vx = Math.floor(div.Vx * (10 / 100));
-		var vy = Math.floor(div.Vy * (10 / 100));
+	div.throw = setInterval(async function () {
+		var vx = Math.floor(div.Vx * (5 / 100));
+		var vy = Math.floor(div.Vy * (5 / 100));
 
 		div.Vx -= vx;
 		div.Vy -= vy;
@@ -140,38 +154,60 @@ function Throwing(div) {
 		div.style.left = (div.offsetLeft + vx) + "px";
 		div.style.top = (div.offsetTop + vy) + "px";
 
-		if (dx > 0) {
+		if (div.Vx > 0) {
 			if (vx < stopSpeed) {
 				div.Vx = 0;
 			}
 		}
-		else if (dx < 0) {
+		else if (div.Vx < 0) {
 			if (vx > -stopSpeed) {
 				div.Vx = 0;
 			}
 		}
 
-		if (dy < 0) {
+		if (div.Vy < 0) {
 			if (vy > -stopSpeed) {
 				div.Vy = 0;
 			}
 		}
-		else if (dy > 0){
+		else if (div.Vy > 0){
 			if (vy < stopSpeed) {
 				div.Vy = 0;
 			}
 		}
 
+		BounceWall(div);
+
 		if (div.Vy === 0 && div.Vx === 0) {
 			clearInterval(div.throw);
+			div.bouncing = false;
+			//Gravity(div);
 		}
 	}, 10)
 }
 
-function Gravity(div, ignoreDiv) {
-	const g = 20;
+async function BounceWall(div) {
+	if (div.offsetLeft < 0) {
+		div.Vx = -div.Vx;
+	}
 
-	div.stop = setInterval(function () {
+	if (div.offsetLeft + div.offsetWidth > window.innerWidth) {
+		div.Vx = -div.Vx;
+	}
+
+	if (div.offsetTop < 0) {
+		div.Vy = -div.Vy;
+	}
+
+	if (div.offsetTop + div.offsetHeight > window.innerHeight) {
+		div.Vy = -div.Vy;
+	}
+}
+
+function Gravity(div, ignoreDiv) {
+	const g = 10;
+
+	div.stopG = setInterval(async function () {
 		div.style.top = (div.offsetTop + g) + "px";
 		div.falling = true;
 
@@ -186,7 +222,11 @@ function Gravity(div, ignoreDiv) {
 				if (Collide(div, div2)) {
 					if (!div2.falling) {
 						div.style.top = (div2.offsetTop - div.offsetHeight - 1) + "px";
-						clearInterval(div.stop);
+						clearTimeout(div.Reset);
+						clearInterval(div.timer);
+						if (!div.bouncing) {
+							clearInterval(div.stopG);
+						}
 						div.falling = false;
 					}
 				}
@@ -197,8 +237,11 @@ function Gravity(div, ignoreDiv) {
 			div.style.top = (window.innerHeight - div.offsetHeight) + "px";
 			div.falling = false;
 			div.grounded = true;
-			clearInterval(div.stop);
-			clearInterval(div.throw);
+			clearTimeout(div.Reset);
+			clearInterval(div.timer);
+			if (!div.bouncing) {
+				clearInterval(div.stopG);
+			}
 		}
 	}, 10)
 }
