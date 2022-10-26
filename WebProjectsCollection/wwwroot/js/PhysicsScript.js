@@ -88,7 +88,7 @@ function DragDiv(e) {
 		clearInterval(this.throw);
 	}
 
-	this.timer = setInterval(async function () {
+	this.timer = setInterval(function () {
 		if (!pause) {
 			div.Dt = div.Dt + 0.4;
 		}
@@ -106,7 +106,7 @@ function DragDiv(e) {
 		}
 	}
 
-	document.onmousemove = async function (e) {
+	document.onmousemove = function (e) {
 		div.style.left = (div.grabX + e.clientX) + "px";
 		div.style.top = (div.grabY + e.clientY) + "px";
 
@@ -118,7 +118,7 @@ function DragDiv(e) {
 		}
 
 		if (!setTimer) {
-			div.Reset = setTimeout(async function () {
+			div.Reset = setTimeout(function () {
 				div.Ix = e.clientX;
 				div.Iy = e.clientY;
 				div.Dt = 0;
@@ -144,7 +144,7 @@ function Throwing(div) {
 	div.Vx = Math.floor(dx / div.Dt);
 	div.Vy = Math.floor(dy / div.Dt);
 
-	div.throw = setInterval(async function () {
+	div.throw = setInterval(function () {
 		var vx = Math.floor(div.Vx * (5 / 100));
 		var vy = Math.floor(div.Vy * (5 / 100));
 
@@ -186,7 +186,7 @@ function Throwing(div) {
 	}, 10)
 }
 
-async function BounceWall(div) {
+function BounceWall(div) {
 	if (div.offsetLeft < 0) {
 		div.Vx = -div.Vx;
 	}
@@ -207,7 +207,7 @@ async function BounceWall(div) {
 function Gravity(div, ignoreDiv) {
 	const g = 10;
 
-	div.stopG = setInterval(async function () {
+	div.stopG = setInterval(function () {
 		div.style.top = (div.offsetTop + g) + "px";
 		div.falling = true;
 

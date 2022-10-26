@@ -1,0 +1,42 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+}
+
+.background {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 5px solid black;
+}
+
+.menu {
+	font-size: 24px;
+	font-family: 'Times New Roman';
+	border: 1px solid black;
+	padding: 0.5rem;
+	width: fit-content;
+	height: fit-content;
+}
+
+.menu * {
+	display: block;
+	margin: 0 auto;
+}
+
+.start-btn {
+	margin-top: 1rem;
+}
+
+.error-message {
+	color: red;
+}

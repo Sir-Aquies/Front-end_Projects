@@ -29,6 +29,8 @@ namespace WebProjectsCollection.Controllers
 
 		public IActionResult Physics() => View();
 
+		public IActionResult MatchingGame() => View();
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
