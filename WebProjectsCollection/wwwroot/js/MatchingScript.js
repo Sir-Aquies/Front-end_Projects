@@ -27,10 +27,37 @@ function StartGame() {
         var size = parseInt(sizeInput.value);
         var menu = document.getElementById("menu");
         var background = document.getElementById("background");
-        //menu.style.display = "none";
-        //background.style.justifyContent = "initial";
-        //background.style.alignItems = "initial";
-        var RaC = CalculateRowsAndColumns(size);
+        var rightPanel = document.getElementById("right-panel");
+        var sizeDisplay = document.getElementById("size-display");
+        menu.style.display = "none";
+        background.style.justifyContent = "left";
+        background.style.alignItems = "initial";
+        var RowsACols = CalculateRowsAndColumns(size);
+        sizeDisplay.innerHTML = size.toString();
+        rightPanel.style.display = "block";
+        var gamePanel = document.createElement("div");
+        gamePanel.className = "game-panel";
+        background.appendChild(gamePanel);
+        CreateCards(RowsACols, gamePanel);
+    }
+}
+function CreateCards(RowsACols, panel) {
+    var rowHeight = Math.floor(panel.offsetHeight / RowsACols.columns);
+    for (var i = 0; i < RowsACols.rows; i++) {
+        var row = document.createElement("div");
+        row.className = "rows";
+        //row.style.height = rowHeight + "px";
+        for (var j = 0; j < RowsACols.columns; j++) {
+            var column = document.createElement("div");
+            column.style.width = "100%";
+            column.style.height = "100%";
+            column.style.backgroundColor = "green";
+            column.style.border = "1px solid darkgreen";
+            column.style.marginLeft = "0.5rem";
+            column.style.marginRight = "0.5rem";
+            row.appendChild(column);
+        }
+        panel.appendChild(row);
     }
 }
 function CalculateRowsAndColumns(size) {

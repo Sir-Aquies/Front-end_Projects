@@ -19,6 +19,36 @@ body {
 	border: 5px solid black;
 }
 
+.right-panel {
+	display: none;
+	height: 100%;
+	width: fit-content;
+	font-size: 24px;
+	font-family: 'Times New Roman';
+	border-right: 1px solid black;
+	background-color: green;
+}
+
+.game-panel {
+	width: 100%;
+	height: 100%;
+	background-color: darkmagenta;
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	flex-wrap: nowrap;
+}
+
+.rows {
+	width: 100%;
+	height: 100%;
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+
 .menu {
 	font-size: 24px;
 	font-family: 'Times New Roman';
