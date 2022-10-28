@@ -14,7 +14,7 @@
 		return false;
 	}
 
-	if (size > 1000 && size % 2 === 0) {
+	if (size >= 1000 && size % 2 === 0) {
 		error.innerHTML = "Start the game at your own risk";
 		return true;
 	}
@@ -40,7 +40,7 @@ function StartGame(): void {
 		const menu = document.getElementById("menu") as HTMLDivElement;
 		const background = document.getElementById("background") as HTMLDivElement;
 		const rightPanel = document.getElementById("right-panel") as HTMLDivElement;
-		const sizeDisplay = document.getElementById("size-display") as HTMLDivElement;
+		const sizeDisplay = document.getElementById("size-display") as HTMLSpanElement;
 		menu.style.display = "none";
 		background.style.justifyContent = "left";
 		background.style.alignItems = "initial";
@@ -48,7 +48,7 @@ function StartGame(): void {
 		const RowsACols = CalculateRowsAndColumns(size) as RaC;
 
 		sizeDisplay.innerHTML = size.toString();
-		rightPanel.style.display = "block";
+		rightPanel.style.display = "flex";
 
 		const gamePanel = document.createElement("div") as HTMLDivElement;
 		gamePanel.className = "game-panel";
@@ -58,31 +58,111 @@ function StartGame(): void {
 	}
 }
 
-function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
-	const rowHeight = Math.floor(panel.offsetHeight / RowsACols.columns);
+interface Card extends HTMLDivElement {
+	secretId: number;
+	complete: boolean;
+	secretImage: string;
+}
 
+const cards: Card[] = [];
+
+function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 	for (let i = 0; i < RowsACols.rows; i++) {
 		const row = document.createElement("div") as HTMLDivElement;
 		row.className = "rows";
-		//row.style.height = rowHeight + "px";
 
 		for (let j = 0; j < RowsACols.columns; j++) {
-			const column = document.createElement("div") as HTMLDivElement;
-			column.style.width = "100%";
-			column.style.height = "100%";
-			column.style.backgroundColor = "green";
-			column.style.border = "1px solid darkgreen";
-			column.style.marginLeft = "0.5rem";
-			column.style.marginRight = "0.5rem";
+			var column = document.createElement("div") as Card;
+			column.className = "cards";
+			cards.push(column);
 			row.appendChild(column);
 		}
 
 		panel.appendChild(row);
 	}
+
+	for (var i = 0; i < cards.length / 2; i++) {
+		const card1 = cards[i];
+		const card2 = cards[i + cards.length / 2];
+
+		card1.secretId = i;
+		card2.secretId = i;
+
+		card1.complete = false;
+		card2.complete = false;
+
+		//card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId})`;
+		//card2.style.backgroundImage = card1.style.backgroundImage;
+
+		card1.secretImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId})`;
+		card2.secretImage = card1.secretImage;
+
+		card1.onclick = function () {
+			CompareCard(card1);
+		};
+
+		card2.onclick = function () {
+			CompareCard(card2);
+		};
+	}
+}
+
+const compare: Card[] = [];
+
+function CompareCard(card: Card): any {
+	const moves = document.getElementById("total-moves") as HTMLSpanElement;
+	var finnishGame: boolean = false;
+	card.style.backgroundImage = card.secretImage;
+	compare.push(card);
+	card.onclick = null;
+
+	if (compare.length === 2) {
+		const card1 = compare[0];
+		const card2 = compare[1];
+
+		if (card1.secretId === card2.secretId) {
+			card1.complete = true;
+			card2.complete = true;
+
+			finnishGame = cards.every(function (value) {
+				return value.complete === true;
+			});
+		}
+		else {
+			card1.onclick = function () {
+				CompareCard(card1);
+			};
+
+			card2.onclick = function () {
+				CompareCard(card2);
+			};
+
+			setTimeout(function (){
+				card1.style.backgroundImage = "none";
+				card2.style.backgroundImage = "none";
+			}, 1000)
+
+			moves.innerHTML = (parseInt(moves.innerHTML) + 1).toString();
+		}
+
+		compare.splice(0, compare.length)
+
+		if (finnishGame) {
+			CompleteGame();
+		}
+	}
+}
+
+function CompleteGame() {
+	alert("congratulations");
 }
 
 function CalculateRowsAndColumns(size: number): RaC {
 	const divisors: number[] = [];
+
+	if (size === 2) {
+		return { rows: 1, columns: 2 } as RaC;
+	}
 
 	for (var i = 2; i < size; i++) {
 		if (size % i === 0) {
@@ -92,10 +172,10 @@ function CalculateRowsAndColumns(size: number): RaC {
 
 	const pairs: RaC[] = [];
 
-	divisors.forEach(function (value, index, array) {
-		for (let i = 0; i < array.length; i++) {
+	divisors.forEach(function (value: number, index, array: number[]) {
+		for (var i = 0; i < array.length; i++) { 
 			if (value * array[i] === size) {
-				if (value > array[i]) {
+				if (value >= array[i]) {
 					const pair: RaC = { rows: value, columns: array[i] }
 					pairs.push(pair);
 				}
