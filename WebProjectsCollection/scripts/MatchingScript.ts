@@ -32,23 +32,35 @@ interface RaC {
 	columns: number;
 }
 
-function StartGame(): void {
+function GameCover(width: string) {
+	const upperCover = document.getElementById("upper-cover") as HTMLDivElement;
+	const lowerCover = document.getElementById("lower-cover") as HTMLDivElement;
+
+	upperCover.style.height = width;
+	lowerCover.style.height = width;
+
+	return new Promise<boolean>(resolve => {
+		setTimeout(() => { resolve(true) }, 1000);
+	});
+}
+
+async function StartGame() {
 	const sizeInput = (document.getElementById("size-input") as HTMLInputElement);
 
 	if (InputCheck(sizeInput)) {
 		const size: number = parseInt(sizeInput.value);
-		const menu = document.getElementById("menu") as HTMLDivElement;
+		document.getElementById("menu").style.display = "none";
+		const game = await GameCover("50%");
 		const background = document.getElementById("background") as HTMLDivElement;
-		const rightPanel = document.getElementById("right-panel") as HTMLDivElement;
 		const sizeDisplay = document.getElementById("size-display") as HTMLSpanElement;
-		menu.style.display = "none";
+		
 		background.style.justifyContent = "left";
 		background.style.alignItems = "initial";
 		
 		const RowsACols = CalculateRowsAndColumns(size) as RaC;
 
 		sizeDisplay.innerHTML = size.toString();
-		rightPanel.style.display = "flex";
+		document.getElementById("right-panel").style.display = "flex";
 
 		const gamePanel = document.createElement("div") as HTMLDivElement;
 		gamePanel.className = "game-panel";
@@ -61,7 +73,7 @@ function StartGame(): void {
 interface Card extends HTMLDivElement {
 	secretId: number;
 	complete: boolean;
-	secretImage: string;
+	cover: HTMLDivElement;
 }
 
 const cards: Card[] = [];
@@ -72,14 +84,25 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 		row.className = "rows";
 
 		for (let j = 0; j < RowsACols.columns; j++) {
-			var column = document.createElement("div") as Card;
+			const cover = document.createElement("div") as HTMLDivElement;
+			const column = document.createElement("div") as Card;
+
+			//TODO - animate card flipping here
+
 			column.className = "cards";
+
+			cover.className = "card-cover";
+			column.cover = cover;
+			column.appendChild(cover);
+
 			cards.push(column);
 			row.appendChild(column);
 		}
 
 		panel.appendChild(row);
 	}
+
+	shuffle(cards);
 
 	for (var i = 0; i < cards.length / 2; i++) {
 		const card1 = cards[i];
@@ -91,11 +114,18 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 		card1.complete = false;
 		card2.complete = false;
 
-		//card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId})`;
-		//card2.style.backgroundImage = card1.style.backgroundImage;
+		card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
+		card2.style.backgroundImage = card1.style.backgroundImage;
 
-		card1.secretImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId})`;
-		card2.secretImage = card1.secretImage;
+		if (i + 1 === cards.length / 2) {
+			var image = new Image();
+			image.addEventListener("load", async function () {
+				await GameCover("0")
+				this.remove();
+			});
+			image.src = `https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId}`;
+		}
+		
 
 		card1.onclick = function () {
 			CompareCard(card1);
@@ -107,12 +137,27 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 	}
 }
 
+function shuffle(array) {
+	let currentIndex = array.length, randomIndex;
+
+	while (currentIndex != 0) {
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex]];
+	}
+
+	return array;
+}
+
 const compare: Card[] = [];
 
 function CompareCard(card: Card): any {
 	const moves = document.getElementById("total-moves") as HTMLSpanElement;
 	var finnishGame: boolean = false;
-	card.style.backgroundImage = card.secretImage;
+	//card.style.backgroundImage = card.secretImage;
+	card.cover.style.display = "none";
 	compare.push(card);
 	card.onclick = null;
 
@@ -138,9 +183,9 @@ function CompareCard(card: Card): any {
 			};
 
 			setTimeout(function (){
-				card1.style.backgroundImage = "none";
-				card2.style.backgroundImage = "none";
-			}, 1000)
+				card1.cover.style.display = "block";
+				card2.cover.style.display = "block";
+			}, 500)
 
 			moves.innerHTML = (parseInt(moves.innerHTML) + 1).toString();
 		}

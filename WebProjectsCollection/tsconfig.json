@@ -6,7 +6,13 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es5",
-    "outDir": "wwwroot/js"
+    "outDir": "wwwroot/js",
+    "lib": [
+      "ES5",
+      "ES2015",
+      "DOM",
+      "ScriptHost"
+    ]
   },
   "include": [
     "scripts/**/*"
