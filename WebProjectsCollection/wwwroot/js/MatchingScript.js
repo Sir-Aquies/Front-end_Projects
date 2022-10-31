@@ -48,7 +48,7 @@ function InputCheck(input) {
         return false;
     }
     if (size >= 1000 && size % 2 === 0) {
-        error.innerHTML = "Start the game at your own risk";
+        error.innerHTML = "This is going to take a while";
         return true;
     }
     if (size % 2 === 0) {
@@ -68,27 +68,27 @@ function GameCover(width) {
 }
 function StartGame() {
     return __awaiter(this, void 0, void 0, function () {
-        var sizeInput, size, game, background, sizeDisplay, RowsACols, gamePanel;
+        var sizeInput, size, centerTab, menu, RowsACols, gamePanel;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     sizeInput = document.getElementById("size-input");
                     if (!InputCheck(sizeInput)) return [3 /*break*/, 2];
                     size = parseInt(sizeInput.value);
-                    document.getElementById("menu").style.display = "none";
+                    centerTab = document.getElementById("center-tab");
+                    centerTab.style.display = "none";
+                    menu = document.getElementById("menu");
+                    menu.style.display = "none";
                     return [4 /*yield*/, GameCover("50%")];
                 case 1:
-                    game = _a.sent();
-                    background = document.getElementById("background");
-                    sizeDisplay = document.getElementById("size-display");
-                    background.style.justifyContent = "left";
-                    background.style.alignItems = "initial";
+                    _a.sent();
                     RowsACols = CalculateRowsAndColumns(size);
-                    sizeDisplay.innerHTML = size.toString();
+                    document.getElementById("size-display").innerHTML = size.toString();
                     document.getElementById("right-panel").style.display = "flex";
                     gamePanel = document.createElement("div");
+                    gamePanel.id = "game-panel";
                     gamePanel.className = "game-panel";
-                    background.appendChild(gamePanel);
+                    document.getElementById("background").appendChild(gamePanel);
                     CreateCards(RowsACols, gamePanel);
                     _a.label = 2;
                 case 2: return [2 /*return*/];
@@ -96,26 +96,40 @@ function StartGame() {
         });
     });
 }
+//Array that will contain all the cards when game is started.
 var cards = [];
 function CreateCards(RowsACols, panel) {
+    cards.splice(0, cards.length);
+    //Create rows and colums, add the respective classes and appendChild the columns to the rows and the rows to the game panel.
     for (var i_1 = 0; i_1 < RowsACols.rows; i_1++) {
         var row = document.createElement("div");
         row.className = "rows";
-        for (var j = 0; j < RowsACols.columns; j++) {
-            var cover = document.createElement("div");
+        var _loop_1 = function (j) {
             var column = document.createElement("div");
             //TODO - animate card flipping here
+            //Add the class and a click event to the column/card.
             column.className = "cards";
+            column.onclick = function () {
+                CompareCard(column);
+            };
+            //Create cover add the class and appendChild it to the column/card.
+            var cover = document.createElement("div");
             cover.className = "card-cover";
             column.cover = cover;
             column.appendChild(cover);
             cards.push(column);
             row.appendChild(column);
+        };
+        for (var j = 0; j < RowsACols.columns; j++) {
+            _loop_1(j);
         }
         panel.appendChild(row);
     }
+    //Just shuffle the array cards with a method that I found on StackOverflow.
     shuffle(cards);
-    var _loop_1 = function () {
+    //Add secretId, complete and image values to the cards.
+    //This is done in pairs using half of the array.
+    for (var i = 0; i < cards.length / 2; i++) {
         var card1 = cards[i];
         var card2 = cards[i + cards.length / 2];
         card1.secretId = i;
@@ -124,14 +138,21 @@ function CreateCards(RowsACols, panel) {
         card2.complete = false;
         card1.style.backgroundImage = "url(https://picsum.photos/".concat(card1.offsetWidth, "/").concat(card1.offsetHeight, "?random&secId=").concat(crypto.randomUUID(), ")");
         card2.style.backgroundImage = card1.style.backgroundImage;
+        //when the last card is created.
         if (i + 1 === cards.length / 2) {
-            image = new Image();
+            //create image and add a load event to it.
+            var image = new Image();
             image.addEventListener("load", function () {
                 return __awaiter(this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, GameCover("0")];
+                            case 0: 
+                            //when image is loaded remove game cover and remove image.
+                            //The point is if last image is loaded that means all other image are loaded too.
+                            return [4 /*yield*/, GameCover("0")];
                             case 1:
+                                //when image is loaded remove game cover and remove image.
+                                //The point is if last image is loaded that means all other image are loaded too.
                                 _a.sent();
                                 this.remove();
                                 return [2 /*return*/];
@@ -139,19 +160,129 @@ function CreateCards(RowsACols, panel) {
                     });
                 });
             });
+            //attach the last card source image.
             image.src = "https://picsum.photos/".concat(card1.offsetWidth, "/").concat(card1.offsetHeight, "?random&secId=").concat(card1.secretId);
         }
-        card1.onclick = function () {
-            CompareCard(card1);
-        };
-        card2.onclick = function () {
-            CompareCard(card2);
-        };
-    };
-    var image;
-    for (var i = 0; i < cards.length / 2; i++) {
-        _loop_1();
     }
+}
+//Array that will contain the cards when click, only two.
+var compare = [];
+//TODO - fix error when card are click to quick.
+function CompareCard(card) {
+    return __awaiter(this, void 0, void 0, function () {
+        var finnishGame, card1_1, card2_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    finnishGame = false;
+                    //Remove cover, add card to compare array and remove the click event.
+                    card.cover.style.display = "none";
+                    compare.push(card);
+                    card.onclick = null;
+                    if (!(compare.length === 2)) return [3 /*break*/, 4];
+                    card1_1 = compare[0];
+                    card2_1 = compare[1];
+                    if (!(card1_1.secretId === card2_1.secretId)) return [3 /*break*/, 1];
+                    card1_1.complete = true;
+                    card2_1.complete = true;
+                    //Checks every complete property in the cards array, if its equal to true set finnishGame variable to true.
+                    finnishGame = cards.every(function (value) {
+                        return value.complete === true;
+                    });
+                    return [3 /*break*/, 3];
+                case 1:
+                    //if secretId value are not equal return onclick event to both of the cards.
+                    card1_1.onclick = function () {
+                        CompareCard(card1_1);
+                    };
+                    card2_1.onclick = function () {
+                        CompareCard(card2_1);
+                    };
+                    //Return cover after 500ms.
+                    return [4 /*yield*/, setTimeout(function () {
+                            card1_1.cover.style.display = "block";
+                            card2_1.cover.style.display = "block";
+                            return new Promise(function (resolve) {
+                                resolve(true);
+                            });
+                        }, 500)];
+                case 2:
+                    //Return cover after 500ms.
+                    _a.sent();
+                    _a.label = 3;
+                case 3:
+                    //Always empty compare array.
+                    compare.splice(0, compare.length);
+                    //Increase the moves by one when two cards are compare.
+                    document.getElementById("total-moves").innerHTML = (parseInt(document.getElementById("total-moves").innerHTML) + 1).toString();
+                    //if finnishGame is true call CompleteGame function.
+                    if (finnishGame) {
+                        CompleteGame();
+                    }
+                    _a.label = 4;
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+//function that will execute when game is completed.
+function CompleteGame() {
+    return __awaiter(this, void 0, void 0, function () {
+        var secondMenu, moves;
+        return __generator(this, function (_a) {
+            document.getElementById("game-panel").remove();
+            cards.splice(0, cards.length);
+            document.getElementById("right-panel").style.display = "none";
+            secondMenu = document.getElementById("second-menu");
+            document.getElementById("center-tab").style.display = "flex";
+            secondMenu.style.display = "block";
+            moves = document.getElementById("total-moves").innerHTML;
+            document.getElementById("total-moves").innerHTML = "0";
+            if (moves === "1") {
+                document.getElementById("total-moves-finnish").innerHTML = moves + " move";
+            }
+            else {
+                document.getElementById("total-moves-finnish").innerHTML = moves + " moves";
+            }
+            document.getElementById("size-display-finnish").innerHTML = document.getElementById("size-display").innerHTML;
+            return [2 /*return*/];
+        });
+    });
+}
+function CalculateRowsAndColumns(size) {
+    var divisors = [];
+    //if size is 2 just return this value, the method can't figure it out 2.
+    if (size === 2) {
+        return { rows: 1, columns: 2 };
+    }
+    //find all the divisor of size. (there is maybe not need for an array, but is more readable)
+    for (var i = 2; i < size; i++) {
+        if (size % i === 0) {
+            divisors.push(i);
+        }
+    }
+    var pairs = [];
+    //finds the pairs of divisors that when multiplicated return the size.
+    divisors.forEach(function (value, index, array) {
+        for (var i = 0; i < array.length; i++) {
+            if (value * array[i] === size) {
+                //Columns have to be bigger than rows.
+                if (value >= array[i]) {
+                    var pair = { rows: array[i], columns: value };
+                    pairs.push(pair);
+                }
+            }
+        }
+    });
+    var output = { rows: pairs[0].rows, columns: pairs[0].columns };
+    //find the pair whose values a the closest by calculating the average, that is the lowest average.
+    pairs.forEach(function (value) {
+        var average = (output.rows + output.columns) / 2;
+        if (average > (value.rows + value.columns) / 2) {
+            output = value;
+        }
+    });
+    return output;
 }
 function shuffle(array) {
     var _a;
@@ -164,75 +295,5 @@ function shuffle(array) {
         ], array[currentIndex] = _a[0], array[randomIndex] = _a[1];
     }
     return array;
-}
-var compare = [];
-function CompareCard(card) {
-    var moves = document.getElementById("total-moves");
-    var finnishGame = false;
-    //card.style.backgroundImage = card.secretImage;
-    card.cover.style.display = "none";
-    compare.push(card);
-    card.onclick = null;
-    if (compare.length === 2) {
-        var card1_1 = compare[0];
-        var card2_1 = compare[1];
-        if (card1_1.secretId === card2_1.secretId) {
-            card1_1.complete = true;
-            card2_1.complete = true;
-            finnishGame = cards.every(function (value) {
-                return value.complete === true;
-            });
-        }
-        else {
-            card1_1.onclick = function () {
-                CompareCard(card1_1);
-            };
-            card2_1.onclick = function () {
-                CompareCard(card2_1);
-            };
-            setTimeout(function () {
-                card1_1.cover.style.display = "block";
-                card2_1.cover.style.display = "block";
-            }, 500);
-            moves.innerHTML = (parseInt(moves.innerHTML) + 1).toString();
-        }
-        compare.splice(0, compare.length);
-        if (finnishGame) {
-            CompleteGame();
-        }
-    }
-}
-function CompleteGame() {
-    alert("congratulations");
-}
-function CalculateRowsAndColumns(size) {
-    var divisors = [];
-    if (size === 2) {
-        return { rows: 1, columns: 2 };
-    }
-    for (var i = 2; i < size; i++) {
-        if (size % i === 0) {
-            divisors.push(i);
-        }
-    }
-    var pairs = [];
-    divisors.forEach(function (value, index, array) {
-        for (var i = 0; i < array.length; i++) {
-            if (value * array[i] === size) {
-                if (value >= array[i]) {
-                    var pair = { rows: value, columns: array[i] };
-                    pairs.push(pair);
-                }
-            }
-        }
-    });
-    var output = { rows: pairs[0].rows, columns: pairs[0].columns };
-    pairs.forEach(function (value) {
-        var average = (output.rows + output.columns) / 2;
-        if (average > (value.rows + value.columns) / 2) {
-            output = value;
-        }
-    });
-    return output;
 }
 //# sourceMappingURL=MatchingScript.js.map
