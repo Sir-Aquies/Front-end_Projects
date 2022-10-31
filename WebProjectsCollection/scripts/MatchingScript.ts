@@ -74,13 +74,16 @@ async function StartGame() {
 	}
 }
 
+interface CardContainer extends HTMLDivElement {
+	cover: HTMLDivElement;
+	card: Card;
+}
+
 interface Card extends HTMLDivElement {
 	//secretId will contain a number to identify pairs when clicked.
 	secretId: number;
 	//If pairs are found complete will be equal to true, default is false.
 	complete: boolean;
-	//Card's cover to hide the image, display = none when clicked.
-	cover: HTMLDivElement;
 }
 
 //Array that will contain all the cards when game is started.
@@ -95,23 +98,24 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 		row.className = "rows";
 
 		for (let j = 0; j < RowsACols.columns; j++) {
-			const column = document.createElement("div") as Card;
-
-			//TODO - animate card flipping here
-			//Add the class and a click event to the column/card.
-			column.className = "cards";
-			column.onclick = function () {
-				CompareCard(column);
-			};
-
-			//Create cover add the class and appendChild it to the column/card.
+			const cardContainer = document.createElement("div") as CardContainer;
+			const card = document.createElement("div") as Card;
+			card.className = "cards";
 			const cover = document.createElement("div") as HTMLDivElement;
 			cover.className = "card-cover";
-			column.cover = cover;
-			column.appendChild(cover);
 
-			cards.push(column);
-			row.appendChild(column);
+			//Add card and cover to the container as well as the properties and the click event.
+			cardContainer.className = "card-container";
+			cardContainer.card = card;
+			cardContainer.appendChild(card);
+			cardContainer.cover = cover;
+			cardContainer.appendChild(cover);
+			cardContainer.onclick = function () {
+				CompareCard(cardContainer);
+			};
+
+			cards.push(card);
+			row.appendChild(cardContainer);
 		}
 
 		panel.appendChild(row);
@@ -151,27 +155,27 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 	}
 }
 
-//Array that will contain the cards when click, only two.
-const compare: Card[] = [];
+//Array that will contain the card containers when click, only two.
+const compare: CardContainer[] = [];
 
 //TODO - fix error when card are click to quick.
-async function CompareCard(card: Card) {
+async function CompareCard(cardContainer: CardContainer) {
 	var finnishGame: boolean = false;
 
-	//Remove cover, add card to compare array and remove the click event.
-	card.cover.style.display = "none";
-	compare.push(card);
-	card.onclick = null;
+	//Add card container to compare array, remove the click event and flip the container.
+	compare.push(cardContainer);
+	cardContainer.onclick = null;
+	cardContainer.style.transform = "rotateY(180deg)";
 
 	//when there two cards in the aray, compare their secretId value.
 	if (compare.length === 2) {
-		const card1 = compare[0];
-		const card2 = compare[1];
+		const cardContainer1 = compare[0];
+		const cardContainer2 = compare[1];
 
 		//if secretId values coincided set complete to true.
-		if (card1.secretId === card2.secretId) {
-			card1.complete = true;
-			card2.complete = true;
+		if (cardContainer1.card.secretId === cardContainer2.card.secretId) {
+			cardContainer1.card.complete = true;
+			cardContainer2.card.complete = true;
 
 			//Checks every complete property in the cards array, if its equal to true set finnishGame variable to true.
 			finnishGame = cards.every(function (value) {
@@ -179,18 +183,18 @@ async function CompareCard(card: Card) {
 			});
 		}
 		else {
-			//if secretId value are not equal return onclick event to both of the cards.
-			card1.onclick = function () {
-				CompareCard(card1);
+			//if secretId value are not equal return onclick event to both of the containers.
+			cardContainer1.onclick = function () {
+				CompareCard(cardContainer1);
 			};
-			card2.onclick = function () {
-				CompareCard(card2);
+			cardContainer2.onclick = function () {
+				CompareCard(cardContainer2);
 			};
 
-			//Return cover after 500ms.
+			//Rotate container back to 0 deg after 500ms.
 			await setTimeout(function () {
-				card1.cover.style.display = "block";
-				card2.cover.style.display = "block";
+				cardContainer1.style.transform = "rotateY(0deg)";
+				cardContainer2.style.transform = "rotateY(0deg)";
 
 				return new Promise<boolean>(resolve => {
 					resolve(true)

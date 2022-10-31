@@ -105,20 +105,22 @@ function CreateCards(RowsACols, panel) {
         var row = document.createElement("div");
         row.className = "rows";
         var _loop_1 = function (j) {
-            var column = document.createElement("div");
-            //TODO - animate card flipping here
-            //Add the class and a click event to the column/card.
-            column.className = "cards";
-            column.onclick = function () {
-                CompareCard(column);
-            };
-            //Create cover add the class and appendChild it to the column/card.
+            var cardContainer = document.createElement("div");
+            var card = document.createElement("div");
+            card.className = "cards";
             var cover = document.createElement("div");
             cover.className = "card-cover";
-            column.cover = cover;
-            column.appendChild(cover);
-            cards.push(column);
-            row.appendChild(column);
+            //Add card and cover to the container as well as the properties and the click event.
+            cardContainer.className = "card-container";
+            cardContainer.card = card;
+            cardContainer.appendChild(card);
+            cardContainer.cover = cover;
+            cardContainer.appendChild(cover);
+            cardContainer.onclick = function () {
+                CompareCard(cardContainer);
+            };
+            cards.push(card);
+            row.appendChild(cardContainer);
         };
         for (var j = 0; j < RowsACols.columns; j++) {
             _loop_1(j);
@@ -165,49 +167,49 @@ function CreateCards(RowsACols, panel) {
         }
     }
 }
-//Array that will contain the cards when click, only two.
+//Array that will contain the card containers when click, only two.
 var compare = [];
 //TODO - fix error when card are click to quick.
-function CompareCard(card) {
+function CompareCard(cardContainer) {
     return __awaiter(this, void 0, void 0, function () {
-        var finnishGame, card1_1, card2_1;
+        var finnishGame, cardContainer1_1, cardContainer2_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     finnishGame = false;
-                    //Remove cover, add card to compare array and remove the click event.
-                    card.cover.style.display = "none";
-                    compare.push(card);
-                    card.onclick = null;
+                    //Add card container to compare array, remove the click event and flip the container.
+                    compare.push(cardContainer);
+                    cardContainer.onclick = null;
+                    cardContainer.style.transform = "rotateY(180deg)";
                     if (!(compare.length === 2)) return [3 /*break*/, 4];
-                    card1_1 = compare[0];
-                    card2_1 = compare[1];
-                    if (!(card1_1.secretId === card2_1.secretId)) return [3 /*break*/, 1];
-                    card1_1.complete = true;
-                    card2_1.complete = true;
+                    cardContainer1_1 = compare[0];
+                    cardContainer2_1 = compare[1];
+                    if (!(cardContainer1_1.card.secretId === cardContainer2_1.card.secretId)) return [3 /*break*/, 1];
+                    cardContainer1_1.card.complete = true;
+                    cardContainer2_1.card.complete = true;
                     //Checks every complete property in the cards array, if its equal to true set finnishGame variable to true.
                     finnishGame = cards.every(function (value) {
                         return value.complete === true;
                     });
                     return [3 /*break*/, 3];
                 case 1:
-                    //if secretId value are not equal return onclick event to both of the cards.
-                    card1_1.onclick = function () {
-                        CompareCard(card1_1);
+                    //if secretId value are not equal return onclick event to both of the containers.
+                    cardContainer1_1.onclick = function () {
+                        CompareCard(cardContainer1_1);
                     };
-                    card2_1.onclick = function () {
-                        CompareCard(card2_1);
+                    cardContainer2_1.onclick = function () {
+                        CompareCard(cardContainer2_1);
                     };
-                    //Return cover after 500ms.
+                    //Rotate container back to 0 deg after 500ms.
                     return [4 /*yield*/, setTimeout(function () {
-                            card1_1.cover.style.display = "block";
-                            card2_1.cover.style.display = "block";
+                            cardContainer1_1.style.transform = "rotateY(0deg)";
+                            cardContainer2_1.style.transform = "rotateY(0deg)";
                             return new Promise(function (resolve) {
                                 resolve(true);
                             });
                         }, 500)];
                 case 2:
-                    //Return cover after 500ms.
+                    //Rotate container back to 0 deg after 500ms.
                     _a.sent();
                     _a.label = 3;
                 case 3:
