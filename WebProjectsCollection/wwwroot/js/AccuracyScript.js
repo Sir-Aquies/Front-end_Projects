@@ -1,6 +1,8 @@
 ﻿var amount = 1;
 const targetsArray = [];
 
+//there is no need for this class, it's just that i wrote the code while reading about javascript classes
+//and now i don't want to rewrite it.
 class Target {
 	constructor(size, x, y) {
 		this.target = CreaterTarget(size, false);
@@ -56,12 +58,37 @@ function TargetShowcaseSize() {
 
 document.getElementById("PlayButton").addEventListener("click", () => { StartGame() });
 
-function StartGame() {
+function StartAnimation() {
+	const container = document.getElementById("gameContainer");
+
+	container.className = "game-container transition-class";
+
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve('resolved');
+		}, 500);
+	});
+}
+
+function EndAnimation() {
+	const container = document.getElementById("gameContainer");
+
+	return new Promise(resolve => {
+		setTimeout(() => {
+			container.className = "game-container";
+			resolve('resolved'); 
+		}, 1000);
+	});
+}
+
+async function StartGame() {
 	const amount = parseInt(document.getElementById("TargetAmount").value);
 
 	if (amount <= 0) {
 		return;
 	}
+
+	await StartAnimation();
 
 	const targetSize = document.getElementById("TargetSize");
 	const bounceBool = document.getElementById("BounceBool");
@@ -72,7 +99,6 @@ function StartGame() {
 	
 	resetBtn.style.display = "block";
 	userTab.style.display = "none";
-	targetShowcase.display = "none";
 
 	for (var i = 0; i < amount; i++) {
 		var TargetClass = new Target(parseInt(targetSize.value));
@@ -125,43 +151,38 @@ function StartGame() {
 					}
 
 				}, 700);
-            }
+			}
 		}
 
 		targetsArray.push(TargetClass);
 	}
 
 	plain.addEventListener("mousedown", Shoot);
+	await EndAnimation();
 }
 
-function EndGame() {
-	if (targetsArray.length !== 0) {
-		const totalShoots = document.getElementById("TotalShoots");
-		const missShoots = document.getElementById("MissShoots");
-		const accuracy = document.getElementById("Accuracy");
-		const resetBtn = document.getElementById("ResetBtn");
-		const userTab = document.getElementById("UserTab");
-		const plain = document.getElementById("Plain");
-		const score = document.getElementById("Score");
-		
-		totalShoots.innerHTML = 0;
-		missShoots.innerHTML = 0;
-		score.innerHTML = 0;
-		amount = 0;
-		accuracy.innerHTML = "0%";
+async function EndGame() {
+	await StartAnimation();
 
-		resetBtn.style.display = "none";
-		userTab.style.display = "block";
-		targetShowcase.display = "block";
+	document.getElementById("TotalShoots").innerHTML = 0;
+	document.getElementById("MissShoots").innerHTML = 0;
+	document.getElementById("Accuracy").innerHTML = "0%";
+	document.getElementById("ResetBtn").style.display = "none";
+	document.getElementById("UserTab").style.display = "block";;
+	document.getElementById("Score").innerHTML = 0;
+	const plain = document.getElementById("Plain");
 
-		while (targetsArray.length !== 0) {
-			targetsArray[0].target.remove();
-			targetsArray.shift();
-		}
+	amount = 0;
 
-		plain.removeEventListener("mousedown", Shoot);
-	}
+	targetsArray.forEach(function (value) {
+		value.target.remove();
+	});
 
+	targetsArray.splice(0, targetsArray.length);
+
+	plain.removeEventListener("mousedown", Shoot);
+
+	await EndAnimation();
 }
 
 function Shoot() {

@@ -1,4 +1,4 @@
-﻿* {
+* {
 	box-sizing: border-box;
 	/*cursor: url(../images/cursor.png), auto;*/
 }
@@ -30,7 +30,42 @@ body {
 	height: 100%;
 	position: relative;
 	display: flex;
+	top: 0;
+	left: 0;
 	flex-direction: column;
+}
+
+.transition-class {
+	animation-name: game-transition;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
+	animation-timing-function: ease-out;
+}
+
+@keyframes game-transition {
+	50% {
+		top: -1200px;
+		left: 0px;
+	}
+
+	54% {
+		top: -1200px;
+		left: 100%;
+	}
+
+	55% {
+		top: 100%;
+		left: 100%;
+	}
+
+	70% {
+		top: 100%;
+		left: 0px;
+	}
+
+	100% {
+		top: 0px;
+	}
 }
 
 .score-tab {
