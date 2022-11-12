@@ -251,6 +251,29 @@ function CompleteGame() {
         });
     });
 }
+function ResetGame() {
+    return __awaiter(this, void 0, void 0, function () {
+        var menu;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, GameCover("50%")];
+                case 1:
+                    _a.sent();
+                    document.getElementById("game-panel").remove();
+                    cards.splice(0, cards.length);
+                    document.getElementById("right-panel").style.display = "none";
+                    document.getElementById("total-moves").innerHTML = "0";
+                    document.getElementById("center-tab").style.display = "flex";
+                    menu = document.getElementById("menu");
+                    menu.style.display = "block";
+                    return [4 /*yield*/, GameCover("0")];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function CalculateRowsAndColumns(size) {
     var divisors = [];
     //if size is 2 just return this value, the method can't figure it out 2.
