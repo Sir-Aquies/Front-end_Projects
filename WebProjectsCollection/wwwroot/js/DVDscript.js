@@ -19,6 +19,8 @@ document.addEventListener("mousedown", function (e) {
 	ds.stop = timeOut;
 });
 
+//TODO - change the background color of the dvds only when collide.
+
 document.addEventListener("mouseup", function (e) {
 	clearTimeout(ds.stop);
 	CreateDVD(e.clientX, e.clientY);
@@ -91,21 +93,8 @@ function CreateDVD(posx, posy, Dx, Dy) {
 	}
 	else {
 		//Ramdomize the initial direction
-		var dxRng = Math.floor(Math.random() * 2);
-		var dyRng = Math.floor(Math.random() * 2);
-
-		if (dxRng == 0) {
-			div.dx = -Vx;
-		}
-		else {
-			div.dx = Vx;
-		}
-		if (dyRng == 0) {
-			div.dy = -Vy;
-		}
-		else {
-			div.dy = Vy;
-		}
+		div.dx = Math.floor(Math.random() * 2) === 0 ? Vx : -Vx;
+		div.dy = Math.floor(Math.random() * 2) === 0 ? Vy : -Vy;
 	}
 
 	//Set the initial position base on the mouse click position

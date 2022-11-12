@@ -1,6 +1,7 @@
 const elms = new Set();
 var id = 0;
 
+//TODO - have an idea of what to do with this project, the execution is ok but the lacks the idea itself.
 document.addEventListener("mousedown", function (e) {
 	const div = DrawDiv(e);
 
@@ -20,6 +21,10 @@ document.addEventListener("mousedown", function (e) {
 function DrawDiv(e) {
 	const div = document.createElement("div");
 	div.className = "cube";
+	let R = Math.floor(Math.random() * 256);
+	let G = Math.floor(Math.random() * 256);
+	let B = Math.floor(Math.random() * 256);
+	div.style.backgroundColor = `rgb(${R}, ${G}, ${B})`;
 	div.id = `Div${id++}`;
 	div.style.left = e.clientX + "px";
 	div.style.top = e.clientY + "px";

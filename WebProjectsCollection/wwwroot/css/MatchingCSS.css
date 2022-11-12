@@ -101,7 +101,7 @@ body {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
-	border-radius: 10px;
+	border-radius: 5px;
 	transform: translateZ(10px);
 	position: absolute;
 }

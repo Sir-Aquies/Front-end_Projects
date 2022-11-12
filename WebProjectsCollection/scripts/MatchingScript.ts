@@ -27,6 +27,8 @@
 	return false;
 }
 
+//TODO - add a reset button
+
 //Interface that holds the rows and columns.
 interface RaC {
 	rows: number;
@@ -235,6 +237,19 @@ async function CompleteGame() {
 	}
 
 	document.getElementById("size-display-finnish").innerHTML = document.getElementById("size-display").innerHTML;
+}
+
+async function ResetGame() {
+	await GameCover("50%");
+	document.getElementById("game-panel").remove();
+	cards.splice(0, cards.length);
+	document.getElementById("right-panel").style.display = "none";
+	document.getElementById("total-moves").innerHTML = "0";
+
+	document.getElementById("center-tab").style.display = "flex";
+	const menu = document.getElementById("menu") as HTMLDivElement;
+	menu.style.display = "block";
+	await GameCover("0");
 }
 
 function CalculateRowsAndColumns(size: number): RaC {

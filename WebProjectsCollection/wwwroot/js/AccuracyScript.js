@@ -18,7 +18,43 @@ class Target {
 		let target_y = Math.floor(Math.random() * (plain.offsetHeight - this.target.offsetHeight));
 
 		this.target.style.left = `${ target_x }px`;
-		this.target.style.top = `${ target_y }px`;
+		this.target.style.top = `${target_y}px`;
+
+		if (this.target.bounce && !this.target.randomize) {
+			switch (Math.floor(Math.random() * 3)) {
+				case 0:
+					this.target.dx = 0;
+					break;
+				case 1:
+					this.target.dx = this.target.speed;
+					break;
+				case 2:
+					this.target.dx = -this.target.speed;
+					break;
+			}
+
+			switch (Math.floor(Math.random() * 3)) {
+				case 0:
+					this.target.dy = 0;
+					break;
+				case 1:
+					this.target.dy = this.target.speed;
+					break;
+				case 2:
+					this.target.dy = -this.target.speed;
+					break;
+			}
+
+			//If both directions are equal to zero, change the value of one.
+			if (this.target.dx === 0 && this.target.dy === 0) {
+				if (Math.floor(Math.random() * 2) === 1) {
+					this.target.dx = Math.floor(Math.random() * 2) ? this.target.speed : -this.target.speed;
+				}
+				else {
+					this.target.dy = Math.floor(Math.random() * 2) ? this.target.speed : -this.target.speed;
+				}
+			}
+		}
 	}
 
 	Resize(w, h) {
@@ -84,15 +120,16 @@ function EndAnimation() {
 async function StartGame() {
 	const amount = parseInt(document.getElementById("TargetAmount").value);
 
-	if (amount <= 0) {
+	if (amount <= 0 || amount > 20) {
+		document.getElementById("TargetAmount").value = 20;
 		return;
 	}
 
 	await StartAnimation();
 
 	const targetSize = document.getElementById("TargetSize");
-	const bounceBool = document.getElementById("BounceBool");
-	const randomBool = document.getElementById("RandomBool");
+	const bounceBool = document.getElementById("BounceBool").checked;
+	const randomBool = document.getElementById("RandomBool").checked;
 	const resetBtn = document.getElementById("ResetBtn");
 	const userTab = document.getElementById("UserTab");
 	const plain = document.getElementById("Plain");
@@ -104,12 +141,45 @@ async function StartGame() {
 		var TargetClass = new Target(parseInt(targetSize.value));
 		TargetClass.ResetPosition();
 
-		if (bounceBool.checked || randomBool.checked) {
-			const speed = document.getElementById("TargetSpeed");
+		if (bounceBool || randomBool) {
+			const speed = parseInt(document.getElementById("TargetSpeed").value);
 
-			let tgt = TargetClass.target;
-			tgt.dx = parseInt(speed.value);
-			tgt.dy = parseInt(speed.value);
+			const tgt = TargetClass.target;
+			tgt.speed = speed;
+			//Give a direction to the target, either 0, positive speed or negative speed.
+			switch (Math.floor(Math.random() * 3)) {
+				case 0:
+					tgt.dx = 0;
+					break;
+				case 1:
+					tgt.dx = tgt.speed;
+					break;
+				case 2:
+					tgt.dx = -tgt.speed;
+					break;
+			}
+
+			switch (Math.floor(Math.random() * 3)) {
+				case 0:
+					tgt.dy = 0;
+					break;
+				case 1:
+					tgt.dy = tgt.speed;
+					break;
+				case 2:
+					tgt.dy = -tgt.speed;
+					break;
+			}
+
+			//If both directions are equal to zero, change the value of one.
+			if (tgt.dx === 0 && tgt.dy === 0) {
+				if (Math.floor(Math.random() * 2) === 1) {
+					tgt.dx = Math.floor(Math.random() * 2) ? tgt.speed : -tgt.speed;
+				}
+				else {
+					tgt.dy = Math.floor(Math.random() * 2) ? tgt.speed : -tgt.speed;
+				}
+			}
 
 			tgt.bounce = setInterval(function () {
 				let x = parseInt(tgt.style.left);
@@ -120,37 +190,47 @@ async function StartGame() {
 				y += tgt.dy;
 				tgt.style.top = `${y}px`;
 
-				if (x >= (plain.offsetWidth - tgt.clientWidth)) {
-					tgt.dx = -tgt.dx;
+				if (tgt.offsetLeft >= (plain.offsetWidth - tgt.clientWidth)) {
+					tgt.dx = -tgt.speed;
+				}
+				else if (tgt.offsetLeft <= 0) {
+					tgt.dx = tgt.speed;
 				}
 
-				if (x <= 0) {
-					tgt.dx = -tgt.dx;
+				if (tgt.offsetTop >= (plain.offsetHeight - tgt.clientHeight)) {
+					tgt.dy = -tgt.speed;
 				}
-
-				if (y >= (plain.offsetHeight - tgt.clientHeight)) {
-					tgt.dy = -tgt.dy;
-				}
-
-				if (y <= 0) {
-					tgt.dy = -tgt.dy;
+				else if (tgt.offsetTop <= 0) {
+					tgt.dy = tgt.speed;
 				}
 			}, 20);
 
-			if (randomBool.checked) {
+			if (randomBool) {
 				tgt.randomize = setInterval(function () {
-					let newDx = Math.floor(Math.random() * 2);
-					let newDy = Math.floor(Math.random() * 2);
-
-					if (newDx === 1) {
-						tgt.dx = -tgt.dx;
+					switch (Math.floor(Math.random() * 3)) {
+						case 0:
+							tgt.dx = 0;
+							break;
+						case 1:
+							tgt.dx = tgt.speed;
+							break;
+						case 2:
+							tgt.dx = -tgt.speed;
+							break;
 					}
 
-					if (newDy === 1) {
-						tgt.dy = -tgt.dy;
+					switch (Math.floor(Math.random() * 3)) {
+						case 0:
+							tgt.dy = 0;
+							break;
+						case 1:
+							tgt.dy = tgt.speed;
+							break;
+						case 2:
+							tgt.dy = -tgt.speed;
+							break;
 					}
-
-				}, 700);
+				}, 500);
 			}
 		}
 
