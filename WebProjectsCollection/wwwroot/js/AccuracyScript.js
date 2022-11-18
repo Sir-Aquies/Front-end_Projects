@@ -69,17 +69,18 @@ class Target {
 }
 
 //Create a target that will work as a showcase for the size of all the targets.
-const targetShowcase = CreaterTarget(5, true);
+const targetShowcase = CreaterTarget(10, true);
 
 //Every time the value of TargetSize changes we modify the size of the showcase.
 document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize() });
+document.getElementById("TargetSize").addEventListener("input", () => { TargetShowcaseSize() });
 
 function TargetShowcaseSize() {
 	const targetSize = document.getElementById("TargetSize");
 	let size = parseInt(targetSize.value);
 
-	if (size > 15) {
-		targetSize.value = 15;
+	if (size > 20) {
+		targetSize.value = 20;
 		return;
 	}
 

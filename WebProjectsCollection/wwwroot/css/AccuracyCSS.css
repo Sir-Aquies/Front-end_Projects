@@ -102,7 +102,7 @@ body {
 	border: 0.5vh solid green;
 	position: absolute;
 	color: green;
-	padding: 1vh 0;
+	padding: 2vh;
 }
 
 input, #TargetContainer {
