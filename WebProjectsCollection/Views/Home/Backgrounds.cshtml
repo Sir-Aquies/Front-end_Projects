@@ -1,0 +1,33 @@
+﻿@{
+	ViewData["Title"] = "Rain";
+}
+
+<style>
+	body, html {
+		overflow: hidden;
+		height: 100%;
+		background-color: black;
+	}
+
+	.drop {
+		width: 2px;
+		height: 6px;
+		position: absolute;
+		top: 0;
+		background-color: dodgerblue;
+	}
+
+	button {
+		color: white;
+		background-color: black;
+		border: 1px solid white;
+		border-radius: 5px;
+		padding: 0.5rem;
+		font-size: 20px;
+	}
+</style>
+
+<button type="button" onclick="Rain()">Rain</button>
+<button type="button" onclick="StopRain()">Stop rain</button>
+
+<script src="~/js/BackgroundsScript.js" asp-append-version="true"></script>
