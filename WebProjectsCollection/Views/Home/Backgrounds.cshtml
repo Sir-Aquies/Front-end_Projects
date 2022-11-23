@@ -9,12 +9,64 @@
 		background-color: black;
 	}
 
+	.container {
+		width: 100% !important;
+		max-width: unset !important;
+		position: relative;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 100%;
+	}
+
 	.drop {
 		width: 2px;
 		height: 6px;
 		position: absolute;
 		top: 0;
 		background-color: dodgerblue;
+	}
+
+	.point {
+		width: 5px;
+		height: 5px;
+		background-color: red;
+		position: absolute;
+	}
+
+	.point2 {
+		width: 10px;
+		height: 10px;
+		background-color: white;
+		position: absolute;
+		transition: all 0.4s;
+		transition-timing-function: linear;
+		border-radius: 50%;
+	}
+
+	.dot {
+		width: 3px;
+		height: 3px;
+		position: absolute;
+		transition: all 0.3s;
+		border-radius: 50%;
+	}
+
+	.sprinkle {
+		width: 5px;
+		height: 5px;
+		position: absolute;
+		border-radius: 50%;
+		transition: width 1s, height 1s, opacity 1s;
+	}
+
+	.navbar {
+		background-color: black !important;
+		border-color: gray !important;
+	}
+
+	.navbar * {
+		background-color: black !important;
+		color: white !important;
 	}
 
 	button {
@@ -24,10 +76,25 @@
 		border-radius: 5px;
 		padding: 0.5rem;
 		font-size: 20px;
+		margin: 1rem;
 	}
 </style>
 
 <button type="button" onclick="Rain()">Rain</button>
 <button type="button" onclick="StopRain()">Stop rain</button>
+
+<br />
+
+<button type="button" onclick="CreatePattern()">Create pattern</button>
+<button type="button" onclick="DeletePattern()">Delete pattern</button>
+
+<br />
+
+<button type="button" onclick="CreateTrailedPoint()">Create trailed point</button>
+<button type="button" onclick="StopTrailedPoint()">Stop trailed point</button>
+
+<br />
+
+<button type="button" onclick="Sprinkle()">Create sprinkle</button>
 
 <script src="~/js/BackgroundsScript.js" asp-append-version="true"></script>
