@@ -132,36 +132,108 @@ function StopTrailedPoint() {
     points.splice(0, points.length);
 }
 
+const sprinkles: HTMLElement[] = [];
+
 function Sprinkle() {
     const container = document.getElementsByClassName('container')[0] as HTMLDivElement;
     for (let i = 0; i < 500; i++) {
         const sprinkle = document.createElement('div') as HTMLDivElement;
         sprinkle.className = 'sprinkle';
+        sprinkles.push(sprinkle);
         sprinkle.style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
         //sprinkle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.random()}`;
         sprinkle.style.left = `${Math.floor(Math.random() * container.offsetWidth)}px`;
         sprinkle.style.top = `${Math.floor(Math.random() * container.offsetHeight)}px`;
-        let max = 2000;
-        let min = 1000;
+        let max = 3000;
+        let min = 100;
         let time = Math.floor(Math.random() * (max - min + 1)) + min;
+        let blindTime = 3000;
 
-        setInterval(() => {
-            //let size = Math.floor(Math.random() * 10);
-            //sprinkle.style.width = `${size}px`;
-            //sprinkle.style.height = `${size}px`;
-            sprinkle.style.opacity = '1';
+        setTimeout(() => {
+            setInterval(() => {
+                //let size = Math.floor(Math.random() * 20);
+                //sprinkle.style.width = `${size}px`;
+                //sprinkle.style.height = `${size}px`;
+                sprinkle.style.opacity = '1';
 
-            sprinkle.style.left = `${Math.floor(Math.random() * container.offsetWidth)}px`;
-            sprinkle.style.top = `${Math.floor(Math.random() * container.offsetHeight)}px`;
-            setTimeout(() => {
-                //sprinkle.style.width = `${1}px`;
-                //sprinkle.style.height = `${1}px`;
-                sprinkle.style.opacity = '0';
-            }, Math.round(time / 2));
+                sprinkle.style.left = `${Math.floor(Math.random() * container.offsetWidth)}px`;
+                sprinkle.style.top = `${Math.floor(Math.random() * container.offsetHeight)}px`;
+                setTimeout(() => {
+                    //sprinkle.style.width = `${1}px`;
+                    //sprinkle.style.height = `${1}px`;
+                    sprinkle.style.opacity = '0';
+                }, Math.round(blindTime / 2));
 
+            }, blindTime);
+            container.appendChild(sprinkle);
         }, time);
-        container.appendChild(sprinkle);
     }
 }
 
-//TODO - create a cicle.
+function StopSprinkle() {
+    sprinkles.forEach(value => value.remove());
+    sprinkles.splice(0, sprinkles.length);
+}
+
+interface ICuadratic {
+    positive?: number;
+    negative?: number;
+}
+
+function Circle() {
+    //(x - x0)^2 + (y - y0)^2 = r^2
+    //(x - x0)^2 = r^2 - (y - y0)^2
+    let r = 100;
+    let h = 500;
+    let k = 500;
+
+    for (let i = (h - r); i <= (h + r); i+= 1.5) {
+        const position: ICuadratic = X(i);
+
+        const pixelPlus1 = CreatePixel();
+        pixelPlus1.id = `positive${i}`
+        pixelPlus1.style.left = `${position.positive}px`;
+        pixelPlus1.style.top = `${i}px`;
+        document.body.appendChild(pixelPlus1);
+
+        const pixelPlus2 = CreatePixel();
+        pixelPlus2.id = `positive${i}`
+        pixelPlus2.style.left = `${i}px`;
+        pixelPlus2.style.top = `${position.positive}px`;
+        document.body.appendChild(pixelPlus2);
+
+        const pixelMinus = CreatePixel();
+        pixelMinus.id = `negative${i}`
+        pixelMinus.style.left = `${position.negative}px`;
+        pixelMinus.style.top = `${i}px`;
+        document.body.appendChild(pixelMinus);
+
+        const pixelMinus2 = CreatePixel();
+        pixelMinus2.id = `negative${i}`
+        pixelMinus2.style.left = `${i}px`;
+        pixelMinus2.style.top = `${position.negative}px`;
+        document.body.appendChild(pixelMinus2);
+    }
+
+    function X(y: number): ICuadratic {
+        const output: ICuadratic = {};
+
+        let c = -Math.pow(r, 2) + Math.pow(y, 2) + Math.pow(h, 2) + Math.pow(k, 2) - 2*(y * k);
+
+        let b = -2 * h;
+
+        let negative = (-b - Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
+        let positive = (-b + Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
+
+        output.negative = Math.round(negative);
+        output.positive = Math.round(positive);
+
+        return output;
+    }
+
+    function CreatePixel(): HTMLDivElement {
+        const pixel = document.createElement('div') as HTMLDivElement;
+        pixel.className = 'pixel';
+        return pixel;
+    }
+}

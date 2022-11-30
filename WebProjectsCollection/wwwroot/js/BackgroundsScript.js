@@ -107,36 +107,89 @@ function StopTrailedPoint() {
     });
     points.splice(0, points.length);
 }
+var sprinkles = [];
 function Sprinkle() {
     var container = document.getElementsByClassName('container')[0];
     var _loop_2 = function (i) {
         var sprinkle = document.createElement('div');
         sprinkle.className = 'sprinkle';
+        sprinkles.push(sprinkle);
         sprinkle.style.backgroundColor = "rgb(".concat(Math.floor(Math.random() * 256), ", ").concat(Math.floor(Math.random() * 256), ", ").concat(Math.floor(Math.random() * 256), ")");
         //sprinkle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.random()}`;
         sprinkle.style.left = "".concat(Math.floor(Math.random() * container.offsetWidth), "px");
         sprinkle.style.top = "".concat(Math.floor(Math.random() * container.offsetHeight), "px");
-        var max = 2000;
-        var min = 1000;
+        var max = 3000;
+        var min = 100;
         var time = Math.floor(Math.random() * (max - min + 1)) + min;
-        setInterval(function () {
-            //let size = Math.floor(Math.random() * 10);
-            //sprinkle.style.width = `${size}px`;
-            //sprinkle.style.height = `${size}px`;
-            sprinkle.style.opacity = '1';
-            sprinkle.style.left = "".concat(Math.floor(Math.random() * container.offsetWidth), "px");
-            sprinkle.style.top = "".concat(Math.floor(Math.random() * container.offsetHeight), "px");
-            setTimeout(function () {
-                //sprinkle.style.width = `${1}px`;
-                //sprinkle.style.height = `${1}px`;
-                sprinkle.style.opacity = '0';
-            }, Math.round(time / 2));
+        var blindTime = 3000;
+        setTimeout(function () {
+            setInterval(function () {
+                //let size = Math.floor(Math.random() * 20);
+                //sprinkle.style.width = `${size}px`;
+                //sprinkle.style.height = `${size}px`;
+                sprinkle.style.opacity = '1';
+                sprinkle.style.left = "".concat(Math.floor(Math.random() * container.offsetWidth), "px");
+                sprinkle.style.top = "".concat(Math.floor(Math.random() * container.offsetHeight), "px");
+                setTimeout(function () {
+                    //sprinkle.style.width = `${1}px`;
+                    //sprinkle.style.height = `${1}px`;
+                    sprinkle.style.opacity = '0';
+                }, Math.round(blindTime / 2));
+            }, blindTime);
+            container.appendChild(sprinkle);
         }, time);
-        container.appendChild(sprinkle);
     };
     for (var i = 0; i < 500; i++) {
         _loop_2(i);
     }
 }
-//TODO - create a cicle.
+function StopSprinkle() {
+    sprinkles.forEach(function (value) { return value.remove(); });
+    sprinkles.splice(0, sprinkles.length);
+}
+function Circle() {
+    //(x - x0)^2 + (y - y0)^2 = r^2
+    //(x - x0)^2 = r^2 - (y - y0)^2
+    var r = 100;
+    var h = 500;
+    var k = 500;
+    for (var i = (h - r); i <= (h + r); i += 1.5) {
+        var position = X(i);
+        var pixelPlus1 = CreatePixel();
+        pixelPlus1.id = "positive".concat(i);
+        pixelPlus1.style.left = "".concat(position.positive, "px");
+        pixelPlus1.style.top = "".concat(i, "px");
+        document.body.appendChild(pixelPlus1);
+        var pixelPlus2 = CreatePixel();
+        pixelPlus2.id = "positive".concat(i);
+        pixelPlus2.style.left = "".concat(i, "px");
+        pixelPlus2.style.top = "".concat(position.positive, "px");
+        document.body.appendChild(pixelPlus2);
+        var pixelMinus = CreatePixel();
+        pixelMinus.id = "negative".concat(i);
+        pixelMinus.style.left = "".concat(position.negative, "px");
+        pixelMinus.style.top = "".concat(i, "px");
+        document.body.appendChild(pixelMinus);
+        var pixelMinus2 = CreatePixel();
+        pixelMinus2.id = "negative".concat(i);
+        pixelMinus2.style.left = "".concat(i, "px");
+        pixelMinus2.style.top = "".concat(position.negative, "px");
+        document.body.appendChild(pixelMinus2);
+    }
+    function X(y) {
+        var output = {};
+        var c = -Math.pow(r, 2) + Math.pow(y, 2) + Math.pow(h, 2) + Math.pow(k, 2) - 2 * (y * k);
+        var b = -2 * h;
+        var negative = (-b - Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
+        var positive = (-b + Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
+        output.negative = Math.round(negative);
+        output.positive = Math.round(positive);
+        return output;
+    }
+    function CreatePixel() {
+        var pixel = document.createElement('div');
+        pixel.className = 'pixel';
+        return pixel;
+    }
+}
 //# sourceMappingURL=BackgroundsScript.js.map

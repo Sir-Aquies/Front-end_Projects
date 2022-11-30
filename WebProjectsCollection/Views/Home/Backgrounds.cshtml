@@ -52,11 +52,18 @@
 	}
 
 	.sprinkle {
-		width: 5px;
-		height: 5px;
+		width: 8px;
+		height: 8px;
 		position: absolute;
 		border-radius: 50%;
-		transition: width 1s, height 1s, opacity 1s;
+		transition: width 1s, height 1s, opacity 1500ms;
+	}
+
+	.pixel {
+		position: absolute;
+		width: 3px;
+		height: 3px;
+		background-color: white;
 	}
 
 	.navbar {
@@ -95,6 +102,10 @@
 
 <br />
 
-<button type="button" onclick="Sprinkle()">Create sprinkle</button>
+<button type="button" onclick="Sprinkle()">Create sprinkles</button>
+<button type="button" onclick="StopSprinkle()">Stop sprinkles</button>
+
+<button type="button" onclick="Circle()">Create circle</button>
+<button type="button" onclick="">Stop Circle</button>
 
 <script src="~/js/BackgroundsScript.js" asp-append-version="true"></script>
