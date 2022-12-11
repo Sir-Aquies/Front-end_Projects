@@ -183,37 +183,81 @@ interface ICuadratic {
 function Circle() {
     //(x - x0)^2 + (y - y0)^2 = r^2
     //(x - x0)^2 = r^2 - (y - y0)^2
-    let r = 100;
-    let h = 500;
+    let r = 200;
+    let h = 600;
     let k = 500;
+    let r_2 = r * (55 / 100);
 
-    for (let i = (h - r); i <= (h + r); i+= 1.5) {
+    let pixels: HTMLDivElement[] = [];
+
+    for (let i = (k - r); i <= (k + r); i += 2) {
         const position: ICuadratic = X(i);
 
-        const pixelPlus1 = CreatePixel();
-        pixelPlus1.id = `positive${i}`
-        pixelPlus1.style.left = `${position.positive}px`;
-        pixelPlus1.style.top = `${i}px`;
-        document.body.appendChild(pixelPlus1);
+        const Plus = CreatePixel();
+        Plus.id = `positive${i}`;
+        Plus.style.left = `${position.positive}px`;
+        Plus.style.top = `${i}px`;
+        document.body.appendChild(Plus);
 
-        const pixelPlus2 = CreatePixel();
-        pixelPlus2.id = `positive${i}`
-        pixelPlus2.style.left = `${i}px`;
-        pixelPlus2.style.top = `${position.positive}px`;
-        document.body.appendChild(pixelPlus2);
+        const Minus = CreatePixel();
+        Minus.id = `negative${i}`;
+        Minus.style.left = `${position.negative}px`;
+        Minus.style.top = `${i}px`;
+        document.body.appendChild(Minus);
 
-        const pixelMinus = CreatePixel();
-        pixelMinus.id = `negative${i}`
-        pixelMinus.style.left = `${position.negative}px`;
-        pixelMinus.style.top = `${i}px`;
-        document.body.appendChild(pixelMinus);
+        pixels.push(Plus, Minus);
 
-        const pixelMinus2 = CreatePixel();
-        pixelMinus2.id = `negative${i}`
-        pixelMinus2.style.left = `${i}px`;
-        pixelMinus2.style.top = `${position.negative}px`;
-        document.body.appendChild(pixelMinus2);
+        if (i > (h - r_2) && i < (h + r_2)) {
+            const pixelPlus2 = CreatePixel();
+            pixelPlus2.id = `positive${i}`;
+            pixelPlus2.style.left = `${i}px`;
+            pixelPlus2.style.top = `${position.positive}px`;
+            document.body.appendChild(pixelPlus2);
+
+            const pixelMinus2 = CreatePixel();
+            pixelMinus2.id = `negative${i}`;
+            pixelMinus2.style.left = `${i}px`;
+            pixelMinus2.style.top = `${position.negative}px`;
+            document.body.appendChild(pixelMinus2);
+
+            pixels.push(pixelMinus2, pixelPlus2);
+        }
     }
+
+    //for (let i = 0; i <= (r*2*Math.PI); i++) {
+    //    let x = h + r * Math.cos(i);
+    //    let y = k + r * Math.sin(i);
+
+    //    const Plus = CreatePixel();
+    //    Plus.id = `positive${i}`;
+    //    Plus.style.left = `${x}px`;
+    //    Plus.style.top = `${y}px`;
+    //    document.body.appendChild(Plus);
+
+    //    pixels.push(Plus);
+    //}
+
+    document.getElementById('demo').innerHTML = pixels.length.toString();
+
+    //let index = 0;
+
+    //let timer = setInterval(() => {
+    //    const pixel = pixels[index];
+    //    pixel.style.opacity = '1';
+
+    //    setTimeout(() => {
+    //        pixel.style.opacity = '0';
+    //    }, 500);
+
+    //    if (index == pixels.length) {
+    //        //clearInterval(timer);
+    //        index = 0;
+    //    }
+
+    //    index++;
+    //}, 10)
+
+    
 
     function X(y: number): ICuadratic {
         const output: ICuadratic = {};
@@ -233,7 +277,65 @@ function Circle() {
 
     function CreatePixel(): HTMLDivElement {
         const pixel = document.createElement('div') as HTMLDivElement;
+        pixel.style.opacity = '1';
         pixel.className = 'pixel';
         return pixel;
     }
 }
+
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+
+//    if (i > (h - r_2) && i < (h + r_2)) {
+//        const pixelMinus2 = CreatePixel();
+//        pixelMinus2.id = `negative${i}`;
+//        pixelMinus2.style.left = `${i}px`;
+//        pixelMinus2.style.top = `${position.negative}px`;
+//        document.body.appendChild(pixelMinus2);
+
+//        pixels.push(pixelMinus2);
+//    }
+//}
+
+//for (let i = (h - r); i <= (h + r); i+= 2) {
+//    const position: ICuadratic = X(i);
+
+//    const pixelPlus = CreatePixel();
+//    pixelPlus.id = `positive${i}`;
+//    pixelPlus.style.left = `${position.positive}px`;
+//    pixelPlus.style.top = `${i}px`;
+//    document.body.appendChild(pixelPlus);
+
+//    pixels.push(pixelPlus);
+//}
+
+//const pixelsReversed: HTMLDivElement[] = [];
+
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+
+//    const pixelMinus = CreatePixel();
+//    pixelMinus.id = `negative${i}`;
+//    pixelMinus.style.left = `${position.negative}px`;
+//    pixelMinus.style.top = `${i}px`;
+//    document.body.appendChild(pixelMinus);
+
+//    pixelsReversed.push(pixelMinus);
+//}
+
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+//    if (i > (h - r_2) && i < (h + r_2)) {
+//        const pixelPlus2 = CreatePixel();
+//        pixelPlus2.id = `positive${i}`;
+//        pixelPlus2.style.left = `${i}px`;
+//        pixelPlus2.style.top = `${position.positive}px`;
+//        document.body.appendChild(pixelPlus2);
+
+//        pixelsReversed.push(pixelPlus2);
+//    }
+//}
+
+//pixelsReversed.reverse();
+
+//pixels = pixels.concat(pixelsReversed);

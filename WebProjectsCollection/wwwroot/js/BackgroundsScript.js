@@ -150,32 +150,62 @@ function StopSprinkle() {
 function Circle() {
     //(x - x0)^2 + (y - y0)^2 = r^2
     //(x - x0)^2 = r^2 - (y - y0)^2
-    var r = 100;
-    var h = 500;
+    var r = 200;
+    var h = 600;
     var k = 500;
-    for (var i = (h - r); i <= (h + r); i += 1.5) {
+    var r_2 = r * (55 / 100);
+    var pixels = [];
+    for (var i = (k - r); i <= (k + r); i += 2) {
         var position = X(i);
-        var pixelPlus1 = CreatePixel();
-        pixelPlus1.id = "positive".concat(i);
-        pixelPlus1.style.left = "".concat(position.positive, "px");
-        pixelPlus1.style.top = "".concat(i, "px");
-        document.body.appendChild(pixelPlus1);
-        var pixelPlus2 = CreatePixel();
-        pixelPlus2.id = "positive".concat(i);
-        pixelPlus2.style.left = "".concat(i, "px");
-        pixelPlus2.style.top = "".concat(position.positive, "px");
-        document.body.appendChild(pixelPlus2);
-        var pixelMinus = CreatePixel();
-        pixelMinus.id = "negative".concat(i);
-        pixelMinus.style.left = "".concat(position.negative, "px");
-        pixelMinus.style.top = "".concat(i, "px");
-        document.body.appendChild(pixelMinus);
-        var pixelMinus2 = CreatePixel();
-        pixelMinus2.id = "negative".concat(i);
-        pixelMinus2.style.left = "".concat(i, "px");
-        pixelMinus2.style.top = "".concat(position.negative, "px");
-        document.body.appendChild(pixelMinus2);
+        var Plus = CreatePixel();
+        Plus.id = "positive".concat(i);
+        Plus.style.left = "".concat(position.positive, "px");
+        Plus.style.top = "".concat(i, "px");
+        document.body.appendChild(Plus);
+        var Minus = CreatePixel();
+        Minus.id = "negative".concat(i);
+        Minus.style.left = "".concat(position.negative, "px");
+        Minus.style.top = "".concat(i, "px");
+        document.body.appendChild(Minus);
+        pixels.push(Plus, Minus);
+        if (i > (h - r_2) && i < (h + r_2)) {
+            var pixelPlus2 = CreatePixel();
+            pixelPlus2.id = "positive".concat(i);
+            pixelPlus2.style.left = "".concat(i, "px");
+            pixelPlus2.style.top = "".concat(position.positive, "px");
+            document.body.appendChild(pixelPlus2);
+            var pixelMinus2 = CreatePixel();
+            pixelMinus2.id = "negative".concat(i);
+            pixelMinus2.style.left = "".concat(i, "px");
+            pixelMinus2.style.top = "".concat(position.negative, "px");
+            document.body.appendChild(pixelMinus2);
+            pixels.push(pixelMinus2, pixelPlus2);
+        }
     }
+    //for (let i = 0; i <= (r*2*Math.PI); i++) {
+    //    let x = h + r * Math.cos(i);
+    //    let y = k + r * Math.sin(i);
+    //    const Plus = CreatePixel();
+    //    Plus.id = `positive${i}`;
+    //    Plus.style.left = `${x}px`;
+    //    Plus.style.top = `${y}px`;
+    //    document.body.appendChild(Plus);
+    //    pixels.push(Plus);
+    //}
+    document.getElementById('demo').innerHTML = pixels.length.toString();
+    //let index = 0;
+    //let timer = setInterval(() => {
+    //    const pixel = pixels[index];
+    //    pixel.style.opacity = '1';
+    //    setTimeout(() => {
+    //        pixel.style.opacity = '0';
+    //    }, 500);
+    //    if (index == pixels.length) {
+    //        //clearInterval(timer);
+    //        index = 0;
+    //    }
+    //    index++;
+    //}, 10)
     function X(y) {
         var output = {};
         var c = -Math.pow(r, 2) + Math.pow(y, 2) + Math.pow(h, 2) + Math.pow(k, 2) - 2 * (y * k);
@@ -188,8 +218,52 @@ function Circle() {
     }
     function CreatePixel() {
         var pixel = document.createElement('div');
+        pixel.style.opacity = '1';
         pixel.className = 'pixel';
         return pixel;
     }
 }
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+//    if (i > (h - r_2) && i < (h + r_2)) {
+//        const pixelMinus2 = CreatePixel();
+//        pixelMinus2.id = `negative${i}`;
+//        pixelMinus2.style.left = `${i}px`;
+//        pixelMinus2.style.top = `${position.negative}px`;
+//        document.body.appendChild(pixelMinus2);
+//        pixels.push(pixelMinus2);
+//    }
+//}
+//for (let i = (h - r); i <= (h + r); i+= 2) {
+//    const position: ICuadratic = X(i);
+//    const pixelPlus = CreatePixel();
+//    pixelPlus.id = `positive${i}`;
+//    pixelPlus.style.left = `${position.positive}px`;
+//    pixelPlus.style.top = `${i}px`;
+//    document.body.appendChild(pixelPlus);
+//    pixels.push(pixelPlus);
+//}
+//const pixelsReversed: HTMLDivElement[] = [];
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+//    const pixelMinus = CreatePixel();
+//    pixelMinus.id = `negative${i}`;
+//    pixelMinus.style.left = `${position.negative}px`;
+//    pixelMinus.style.top = `${i}px`;
+//    document.body.appendChild(pixelMinus);
+//    pixelsReversed.push(pixelMinus);
+//}
+//for (let i = (h - r); i <= (h + r); i += 2) {
+//    const position: ICuadratic = X(i);
+//    if (i > (h - r_2) && i < (h + r_2)) {
+//        const pixelPlus2 = CreatePixel();
+//        pixelPlus2.id = `positive${i}`;
+//        pixelPlus2.style.left = `${i}px`;
+//        pixelPlus2.style.top = `${position.positive}px`;
+//        document.body.appendChild(pixelPlus2);
+//        pixelsReversed.push(pixelPlus2);
+//    }
+//}
+//pixelsReversed.reverse();
+//pixels = pixels.concat(pixelsReversed);
 //# sourceMappingURL=BackgroundsScript.js.map

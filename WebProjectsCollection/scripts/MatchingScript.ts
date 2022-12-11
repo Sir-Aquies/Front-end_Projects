@@ -14,9 +14,10 @@
 		return false;
 	}
 
-	if (size >= 1000 && size % 2 === 0) {
-		error.innerHTML = "This is going to take a while";
-		return true;
+	if (size > 1866) {
+		error.innerHTML = "Max size is 1866";
+		input.value = "1866";
+		return false;
 	}
 
 	if (size % 2 === 0) {
@@ -26,8 +27,6 @@
 
 	return false;
 }
-
-//TODO - add a reset button
 
 //Interface that holds the rows and columns.
 interface RaC {
@@ -53,14 +52,14 @@ async function StartGame() {
 	if (InputCheck(sizeInput)) {
 		const size: number = parseInt(sizeInput.value);
 
+		await GameCover("50%");
+
 		const centerTab = document.getElementById("center-tab") as HTMLDivElement;
 		centerTab.style.display = "none";
 
 		const menu = document.getElementById("menu") as HTMLDivElement;
 		menu.style.display = "none";
 
-		await GameCover("50%");
-		
 		const RowsACols = CalculateRowsAndColumns(size) as RaC;
 
 		document.getElementById("size-display").innerHTML = size.toString();
@@ -128,18 +127,32 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 
 	//Add secretId, complete and image values to the cards.
 	//This is done in pairs using half of the array.
+	const idArray: number[] = [];
 	for (var i = 0; i < cards.length / 2; i++) {
 		const card1 = cards[i];
 		const card2 = cards[i + cards.length / 2];
 
-		card1.secretId = i;
-		card2.secretId = i;
-
+		do {
+			card1.secretId = Math.floor(Math.random() * 994);
+			card2.secretId = card1.secretId;
+			if (idArray.find(value => value === card1.secretId) !== undefined) {
+				card1.secretId = -1;
+			}
+			else {
+				idArray.push(card1.secretId);
+			}
+		}
+		while (card1.secretId === -1)
+		
 		card1.complete = false;
 		card2.complete = false;
 
-		card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
-		card2.style.backgroundImage = card1.style.backgroundImage;
+		//card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
+		//card2.style.backgroundImage = card1.style.backgroundImage;
+
+		const array: Card[] = [card1, card2];
+
+		getJSON(`https://picsum.photos/v2/list?page=${ card1.secretId }&limit=1`, array)
 
 		//when the last card is created.
 		if (i + 1 === cards.length / 2) {
@@ -155,6 +168,24 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 			image.src = `https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${card1.secretId}`;
 		}
 	}
+}
+
+function getJSON(url: string, array: Card[]) {
+	const xhttp = new XMLHttpRequest();
+	xhttp.open('GET', url);
+	xhttp.responseType = 'json';
+
+	xhttp.onload = function () {
+		const [data] = this.response;
+		let url = data.download_url as string;
+
+		for (let i = 0; i < array.length; i++) {
+			array[i].style.backgroundImage = `url(https://picsum.photos/id/${ url.split('/')[4] }/${ array[i].offsetWidth }/${ array[i].offsetHeight })`;
+			//array[i].style.backgroundImage = `url(${url})`;
+		}
+	}
+
+	xhttp.send();
 }
 
 //Array that will contain the card containers when click, only two.
@@ -244,6 +275,7 @@ async function ResetGame() {
 	document.getElementById("game-panel").remove();
 	cards.splice(0, cards.length);
 	document.getElementById("right-panel").style.display = "none";
+	document.getElementById("second-menu").style.display = 'none';
 	document.getElementById("total-moves").innerHTML = "0";
 
 	document.getElementById("center-tab").style.display = "flex";

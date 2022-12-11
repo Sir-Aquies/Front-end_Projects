@@ -47,9 +47,10 @@ function InputCheck(input) {
         error.innerHTML = "Size can not be negative";
         return false;
     }
-    if (size >= 1000 && size % 2 === 0) {
-        error.innerHTML = "This is going to take a while";
-        return true;
+    if (size > 1866) {
+        error.innerHTML = "Max size is 1866";
+        input.value = "1866";
+        return false;
     }
     if (size % 2 === 0) {
         error.innerHTML = "";
@@ -75,13 +76,13 @@ function StartGame() {
                     sizeInput = document.getElementById("size-input");
                     if (!InputCheck(sizeInput)) return [3 /*break*/, 2];
                     size = parseInt(sizeInput.value);
+                    return [4 /*yield*/, GameCover("50%")];
+                case 1:
+                    _a.sent();
                     centerTab = document.getElementById("center-tab");
                     centerTab.style.display = "none";
                     menu = document.getElementById("menu");
                     menu.style.display = "none";
-                    return [4 /*yield*/, GameCover("50%")];
-                case 1:
-                    _a.sent();
                     RowsACols = CalculateRowsAndColumns(size);
                     document.getElementById("size-display").innerHTML = size.toString();
                     document.getElementById("right-panel").style.display = "flex";
@@ -131,19 +132,30 @@ function CreateCards(RowsACols, panel) {
     shuffle(cards);
     //Add secretId, complete and image values to the cards.
     //This is done in pairs using half of the array.
-    for (var i = 0; i < cards.length / 2; i++) {
+    var idArray = [];
+    var _loop_2 = function () {
         var card1 = cards[i];
         var card2 = cards[i + cards.length / 2];
-        card1.secretId = i;
-        card2.secretId = i;
+        do {
+            card1.secretId = Math.floor(Math.random() * 994);
+            card2.secretId = card1.secretId;
+            if (idArray.find(function (value) { return value === card1.secretId; }) !== undefined) {
+                card1.secretId = -1;
+            }
+            else {
+                idArray.push(card1.secretId);
+            }
+        } while (card1.secretId === -1);
         card1.complete = false;
         card2.complete = false;
-        card1.style.backgroundImage = "url(https://picsum.photos/".concat(card1.offsetWidth, "/").concat(card1.offsetHeight, "?random&secId=").concat(crypto.randomUUID(), ")");
-        card2.style.backgroundImage = card1.style.backgroundImage;
+        //card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
+        //card2.style.backgroundImage = card1.style.backgroundImage;
+        var array = [card1, card2];
+        getJSON("https://picsum.photos/v2/list?page=".concat(card1.secretId, "&limit=1"), array);
         //when the last card is created.
         if (i + 1 === cards.length / 2) {
             //create image and add a load event to it.
-            var image = new Image();
+            image = new Image();
             image.addEventListener("load", function () {
                 return __awaiter(this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
@@ -165,7 +177,25 @@ function CreateCards(RowsACols, panel) {
             //attach the last card source image.
             image.src = "https://picsum.photos/".concat(card1.offsetWidth, "/").concat(card1.offsetHeight, "?random&secId=").concat(card1.secretId);
         }
+    };
+    var image;
+    for (var i = 0; i < cards.length / 2; i++) {
+        _loop_2();
     }
+}
+function getJSON(url, array) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open('GET', url);
+    xhttp.responseType = 'json';
+    xhttp.onload = function () {
+        var data = this.response[0];
+        var url = data.download_url;
+        for (var i = 0; i < array.length; i++) {
+            array[i].style.backgroundImage = "url(https://picsum.photos/id/".concat(url.split('/')[4], "/").concat(array[i].offsetWidth, "/").concat(array[i].offsetHeight, ")");
+            //array[i].style.backgroundImage = `url(${url})`;
+        }
+    };
+    xhttp.send();
 }
 //Array that will contain the card containers when click, only two.
 var compare = [];
@@ -262,6 +292,7 @@ function ResetGame() {
                     document.getElementById("game-panel").remove();
                     cards.splice(0, cards.length);
                     document.getElementById("right-panel").style.display = "none";
+                    document.getElementById("second-menu").style.display = 'none';
                     document.getElementById("total-moves").innerHTML = "0";
                     document.getElementById("center-tab").style.display = "flex";
                     menu = document.getElementById("menu");
