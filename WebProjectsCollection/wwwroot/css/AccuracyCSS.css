@@ -1,5 +1,6 @@
 * {
 	box-sizing: border-box;
+	color: var(--quinary) !important; 
 	/*cursor: url(../images/cursor.png), auto;*/
 }
 
@@ -18,8 +19,18 @@ html {
 	font-weight: bold;
 }
 
+:root {
+	--primary: #0a1a2f;
+	--secondary: #04373b;
+	--tertiary: #1a644e;
+	--quaternary: #40985e;
+	--quinary: #d1cb95;
+}
+
 body {
-	background-color: black;
+	background-color: var(--primary);
+	font-family: Pixels;
+	font-size: 4vh;
 	overflow: hidden;
 	position: relative;
 	height: 100%;
@@ -44,7 +55,7 @@ body {
 
 @keyframes game-transition {
 	50% {
-		top: -1200px;
+		bottom: 100%;
 		left: 0px;
 	}
 
@@ -69,20 +80,16 @@ body {
 }
 
 .score-tab {
-	position: relative;
-	display: flex;
+	display: none;
 	justify-content: space-around;
 	width: 100%;
-	border: 0.5vh solid green;
+	border: 0.5vh solid var(--quaternary);
 	border-bottom: none;
-	font-size: 3vh;
-	color: green;
-	font-family: Pixels;
 }
 
 .normal-btn {
 	font-size: 2.5vh;
-	border: 0.2vh solid green;
+	border: 0.2vh solid var(--quaternary);
 }
 
 .plain {
@@ -92,50 +99,48 @@ body {
 	align-items: center;
 	position: relative;
 	width: 100%;
-	border: 0.5vh solid green;
+	border: 0.5vh solid var(--quaternary);
 	overflow: hidden;
 }
 
 .user-tab {
+	min-width: fit-content;
 	width: 50%;
 	height: fit-content;
-	border: 0.5vh solid green;
-	position: absolute;
-	color: green;
+	border: 0.5vh solid var(--quaternary);
 	padding: 2vh;
 }
 
 input, #TargetContainer {
-	background-color: transparent;
-	color: green;
-	font-size: 4vh;
-	border: 0.5vh solid green;
+	background-color: var(--secondary);
+	border: 0.5vh solid var(--quaternary);
 	margin: 0.3vh;
-	font-family: Pixels;
 }
 
-label {
-	font-size: 4vh;
-	font-family: Pixels;
+.target {
+	position: absolute;
+	background-color: var(--quinary);
+	border-radius: 50%;
 }
 
 .upper-container {
 	width: 100%;
-	position: relative;
 	display: flex;
+}
+
+.upper-container > div {
+	width: 50%;
 }
 
 #TargetContainer {
-	width: 50%;
-	margin: 0;
-	position: relative;
+	padding: 0.5rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background-color: var(--secondary);
 }
 
 .target-options {
-	width: 50%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -143,6 +148,7 @@ label {
 
 .target-options input {
 	width: 80%;
+	background-color: var(--secondary);
 	height: fit-content;
 }
 
@@ -151,47 +157,148 @@ label {
 }
 
 .lower-container {
-	position: relative;
 	width: 100%;
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	margin-top: 1vh;
+	margin-top: 3vh;
+}
+
+.lower-container > div {
+	width: 33.33%;
+}
+
+.input-container-left {
+	font-size: 3vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.timer {
+	width: 80%;
+	height: 3rem;
+	text-align: center;
+	background-color: var(--secondary);
+	border: 0.5vh solid var(--quaternary);
+}
+
+.input-container-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .input-container-right {
 	display: flex;
-	flex-direction: column;
-	width: fit-content;
-	position: absolute;
-	right: 0;
+	flex-wrap: wrap;
+	font-size: 2vh;
 }
 
-.input-container-right label, input[type=checkbox] {
-	font-size: 2vh;
-	height: fit-content;
+.input-container-right > div {
+	white-space: nowrap;
+}
+
+.costum-checkbox {
+	display: block;
 	position: relative;
+	padding-left: 2.5vh;
+	font-size: 2vh;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.costum-checkbox > input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+.checkmark {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 0;
+	height: 2vh;
+	width: 2vh;
+	background-color: var(--secondary);
+	border: 0.4vh solid var(--quaternary);
+}
+
+.costum-checkbox input:checked ~ .checkmark {
+	background-color: var(--quinary);
+}
+
+@media screen and (max-width: 480px) {
+	body {
+		font-size: 1vh;
+	}
+
+	.normal-btn {
+		font-size: 2vh;
+	}
+
+	.score-tab {
+		justify-content: space-between	;
+		flex-wrap: wrap;
+	}
+
+	.upper-container {
+		display: block;
+	}
+
+	.upper-container > div {
+		width: 100%;
+		margin: 2rem 0 !important;
+	}
+}
+
+@media screen and (max-width: 768px){
+	body {
+		font-size: 2vh;
+	}
+
+	.normal-btn {
+		font-size: 1vh;
+	}
+
+	.user-tab {
+		font-size: 4vh;
+		width: 100%;
+	}
+
+	.lower-container {
+		display: block;
+	}
+
+	.lower-container > div {
+		width: 100%;
+		margin: 1rem 0;
+	}
+
+	.input-container-right {
+		display: block;
+	}
 }
 
 #TargetAmount:focus {
-	outline: 3px solid green;
-	box-shadow: 0px 0px 35px green;
-}
-
-#TargetSize:focus {
-	outline: 3px solid green;
-	box-shadow: 0px 0px 35px green;
+	outline: 3px solid var(--secondary);
+	box-shadow: 0px 0px 35px var(--secondary);
 }
 
 #PlayButton:hover {
-	box-shadow: 0px 0px 35px green;
+	box-shadow: 0px 0px 35px var(--secondary);
 }
 
 input[type=range] {
 	-webkit-appearance: none;
 	border-radius: 5px;
 	height: 1.5vh;
-	background: darkgreen;
+	background: var(--secondary);
 	outline: none;
 	opacity: 0.7;
 	-webkit-transition: .2s;
@@ -209,7 +316,7 @@ input[type=range]::-webkit-slider-thumb {
 	width: 2.5vh;
 	height: 2.5vh;
 	border-radius: 50%;
-	background: green;
+	background: var(--quinary);
 	cursor: pointer;
 }
 
@@ -217,6 +324,6 @@ input[type=range]::-moz-range-thumb {
 	width: 25px;
 	height: 25px;
 	border-radius: 50%;
-	background: green;
+	background: var(--quinary);
 	cursor: pointer;
 }

@@ -58,8 +58,8 @@ class Target {
 	}
 
 	Resize(w, h) {
-		this.target.style.width = `${w}0px`;
-		this.target.style.height = `${h}0px`;
+		this.target.style.width = `${w}vh`;
+		this.target.style.height = `${h}vh`;
 	}
 
 	ReLocate(x, y) {
@@ -75,22 +75,122 @@ const targetShowcase = CreaterTarget(10, true);
 document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize() });
 document.getElementById("TargetSize").addEventListener("input", () => { TargetShowcaseSize() });
 
+document.getElementById('timer').addEventListener('click', function () {
+	ClickTimer(this);
+})
+
+
+function ClickTimer(timer) {
+	let text = '';
+	let controller = new AbortController();
+
+	document.addEventListener('keydown', function (key) {
+		if (key.key == 'Backspace') {
+			//if (text.length % 2 === 0) {
+			//	text = text.slice(0, text.length - 2);
+			//}
+			//else 
+			if (text.length > 0) {
+				text = text.slice(0, text.length - 1);
+			}
+		}
+		else if (key.key.match(/[0-9]/g) && text.length < 6) {
+			text += key.key;
+		}
+
+		const array = text.split('');
+		let ss = '';
+		let mm = '';
+		let hh = '';
+
+		if (text.length <= 2) {
+			for (let i = 0; i < array.length; i++) {
+				ss += array[i];
+			}
+		}
+
+		if (text.length >= 3 && text.length <= 4) {
+			for (let i = 0; i < 2; i++) {
+				ss += array[i];
+			}
+
+			mm = ss;
+			ss = '';
+
+			for (let i = 2; i < array.length; i++) {
+				ss += array[i];
+			}
+		}
+
+		if (text.length >= 5) {
+			for (let i = 0; i < 2; i++) {
+				ss += array[i];
+			}
+
+			mm = ss;
+			ss = '';
+
+			for (let i = 2; i < 4; i++) {
+				ss += array[i];
+			}
+
+			hh = mm;
+			mm = ss;
+			ss = '';
+
+			for (let i = 4; i < array.length; i++) {
+				ss += array[i];
+			}
+		}
+
+		if (ss.length === 0) {
+			ss = '00';
+		}
+		else if (ss.length === 1) {
+			ss = `0${ss}`;
+		}
+
+		if (mm.length === 0) {
+			mm = '00';
+		}
+		else if (mm.length === 1) {
+			mm = `0${mm}`;
+		}
+
+		if (hh.length === 0) {
+			hh = '00';
+		}
+		else if (hh.length === 1) {
+			hh = `0${hh}`;
+		}
+
+		timer.innerHTML = `${hh}h:${mm}m:${ss}s`;
+	}, {signal: controller.signal});
+
+	document.addEventListener('mousedown', UnfocusTimer)
+
+	function UnfocusTimer() {
+		controller.abort();
+		document.removeEventListener('mousedown', UnfocusTimer)
+	}
+}
+
 function TargetShowcaseSize() {
 	const targetSize = document.getElementById("TargetSize");
 	let size = parseInt(targetSize.value);
 
-	if (size > 20) {
-		targetSize.value = 20;
-		return;
-	}
+	//if (size > 21) {
+	//	targetSize.value = 21;
+	//	return;
+	//}
 
-	if (size < 1) {
-		targetSize.value = 1;
-		return;
-	}
+	//if (size < 1) {
+	//	targetSize.value = 1;
+	//	return;
+	//}
 
-	targetShowcase.style.width = `${size}0px`;
-	targetShowcase.style.height = `${size}0px`;
+	targetShowcase.style.width = `${size}vh`;
+	targetShowcase.style.height = `${size}vh`;
 }
 
 document.getElementById("PlayButton").addEventListener("click", () => { StartGame() });
@@ -128,18 +228,17 @@ async function StartGame() {
 
 	await StartAnimation();
 
-	const targetSize = document.getElementById("TargetSize");
+	const targetSize = document.getElementById("TargetSize").value;
 	const bounceBool = document.getElementById("BounceBool").checked;
 	const randomBool = document.getElementById("RandomBool").checked;
-	const resetBtn = document.getElementById("ResetBtn");
-	const userTab = document.getElementById("UserTab");
 	const plain = document.getElementById("Plain");
-	
-	resetBtn.style.display = "block";
-	userTab.style.display = "none";
+
+	document.getElementById("ResetBtn").style.display = "block";
+	document.getElementById("scoretab").style.display = "flex";
+	document.getElementById("UserTab").style.display = "none";
 
 	for (var i = 0; i < amount; i++) {
-		var TargetClass = new Target(parseInt(targetSize.value));
+		var TargetClass = new Target(parseInt(targetSize));
 		TargetClass.ResetPosition();
 
 		if (bounceBool || randomBool) {
@@ -249,13 +348,16 @@ async function EndGame() {
 	document.getElementById("MissShoots").innerHTML = 0;
 	document.getElementById("Accuracy").innerHTML = "0%";
 	document.getElementById("ResetBtn").style.display = "none";
-	document.getElementById("UserTab").style.display = "block";;
+	document.getElementById("UserTab").style.display = "block";
+	document.getElementById("scoretab").style.display = "none";
 	document.getElementById("Score").innerHTML = 0;
 	const plain = document.getElementById("Plain");
 
 	amount = 0;
 
 	targetsArray.forEach(function (value) {
+		clearInterval(value.target.randomize);
+		clearInterval(value.target.bounce);
 		value.target.remove();
 	});
 
@@ -326,20 +428,21 @@ function AccuracyCalculation() {
 function CreaterTarget(size, show) {
 	const targetdiv = document.createElement("div");
 
+	targetdiv.className = 'target';
+	//targetdiv.style.height = `${size}0px`;
+	//targetdiv.style.width = `${size}0px`;
+	targetdiv.style.height = `${size}vh`;
+	targetdiv.style.width = `${size}vh`;
+	targetdiv.id = `target_${amount}`;
+	amount++;
+
 	if (show == true) {
 		document.getElementById("TargetContainer").appendChild(targetdiv);
+		targetdiv.style.position = 'relative';
 	}
 	else {
 		document.getElementById("Plain").appendChild(targetdiv);
 	}
-
-	targetdiv.style.height = `${size}0px`;
-	targetdiv.style.width = `${size}0px`;
-	targetdiv.style.position = "absolute";
-	targetdiv.style.backgroundColor = "darkred";
-	targetdiv.style.borderRadius = "50%";
-	targetdiv.id = `target_${amount}`;
-	amount++;
 
 	return targetdiv;
 }

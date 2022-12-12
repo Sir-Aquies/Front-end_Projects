@@ -15,17 +15,17 @@
 	</div>
 
 	<div id="Plain" class="plain">
-		<div id="UserTab" class="user-tab" onmousedown="event.stopPropagation()">
+		<div id="UserTab" class="user-tab">
 			<div class="upper-container">
 				<div class="target-options">
 					<label>Amount</label>
 					<input id="TargetAmount" type="number" value="10" />
 
 					<label>Size</label>
-					<input id="TargetSize" type="range" step="1" value="10" min="1" max="20" />
+					<input id="TargetSize" type="range" step="1" value="10" min="1" max="21" />
 
 					<label id="TargetSpeedLabel" style="display: none">Speed</label>
-					<input id="TargetSpeed" type="range" min="3" max="12" style="display: none;" />
+					<input id="TargetSpeed" type="range" min="3" max="20" style="display: none;" />
 				</div>
 
 				<div id="TargetContainer"></div>
@@ -33,17 +33,28 @@
 			
 
 			<div class="lower-container">
-				<input type="button" id="PlayButton" value="Play" />
+				<div class="input-container-left">
+					<label>Timer</label>
+					<div class="timer" id="timer">00h:00m:00s</div>
+				</div>
+
+				<div class="input-container-center">
+					<input type="button" id="PlayButton" value="Play" />
+				</div>
 
 				<div class="input-container-right">
 					<div>
-						<input type="checkbox" id="RandomBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
-						<label for="RandomBool">Randomize movement</label>
+						<label class="costum-checkbox">Randomize movement
+							<input type="checkbox" id="RandomBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
+							<span class="checkmark"></span>
+						</label>
 					</div>
 					
 					<div>
-						<input type="checkbox" id="BounceBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
-						<label for="BounceBool">Bouncing target</label>
+						<label class="costum-checkbox">Bouncing target
+							<input type="checkbox" id="BounceBool" onclick="ToggleOptions()" onchange="ToogleCheckbox(this)" />
+							<span class="checkmark"></span>
+						</label>
 					</div>
 				</div>
 			</div>
