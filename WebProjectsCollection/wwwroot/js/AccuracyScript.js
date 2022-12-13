@@ -18,7 +18,7 @@ class Target {
 		let target_y = Math.floor(Math.random() * (plain.offsetHeight - this.target.offsetHeight));
 
 		this.target.style.left = `${ target_x }px`;
-		this.target.style.top = `${target_y}px`;
+		this.target.style.top = `${ target_y }px`;
 
 		if (this.target.bounce && !this.target.randomize) {
 			switch (Math.floor(Math.random() * 3)) {
@@ -72,13 +72,14 @@ class Target {
 const targetShowcase = CreaterTarget(10, true);
 
 //Every time the value of TargetSize changes we modify the size of the showcase.
-document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize() });
-document.getElementById("TargetSize").addEventListener("input", () => { TargetShowcaseSize() });
+document.getElementById("TargetSize").addEventListener("change", () => { TargetShowcaseSize(); });
+document.getElementById("TargetSize").addEventListener("input", () => { TargetShowcaseSize(); });
+
+document.getElementById('results_tab').addEventListener('click', () => { document.getElementById('results_tab').style.display = 'none'; });
 
 document.getElementById('timer').addEventListener('click', function () {
 	ClickTimer(this);
 })
-
 
 function ClickTimer(timer) {
 	let text = '';
@@ -86,10 +87,6 @@ function ClickTimer(timer) {
 
 	document.addEventListener('keydown', function (key) {
 		if (key.key == 'Backspace') {
-			//if (text.length % 2 === 0) {
-			//	text = text.slice(0, text.length - 2);
-			//}
-			//else 
 			if (text.length > 0) {
 				text = text.slice(0, text.length - 1);
 			}
@@ -99,49 +96,29 @@ function ClickTimer(timer) {
 		}
 
 		const array = text.split('');
+		array.reverse();
+
 		let ss = '';
 		let mm = '';
 		let hh = '';
 
-		if (text.length <= 2) {
-			for (let i = 0; i < array.length; i++) {
+		for (let i = 0; i < array.length; i++) {
+			if (i < 2) {
 				ss += array[i];
+			}
+
+			if (i >= 2 && i <= 3) {
+				mm += array[i];
+			}
+
+			if (i >= 4) {
+				hh += array[i];
 			}
 		}
 
-		if (text.length >= 3 && text.length <= 4) {
-			for (let i = 0; i < 2; i++) {
-				ss += array[i];
-			}
-
-			mm = ss;
-			ss = '';
-
-			for (let i = 2; i < array.length; i++) {
-				ss += array[i];
-			}
-		}
-
-		if (text.length >= 5) {
-			for (let i = 0; i < 2; i++) {
-				ss += array[i];
-			}
-
-			mm = ss;
-			ss = '';
-
-			for (let i = 2; i < 4; i++) {
-				ss += array[i];
-			}
-
-			hh = mm;
-			mm = ss;
-			ss = '';
-
-			for (let i = 4; i < array.length; i++) {
-				ss += array[i];
-			}
-		}
+		ss = ss.split('').reverse().join('');
+		mm = mm.split('').reverse().join('');
+		hh = hh.split('').reverse().join('');
 
 		if (ss.length === 0) {
 			ss = '00';
@@ -164,7 +141,7 @@ function ClickTimer(timer) {
 			hh = `0${hh}`;
 		}
 
-		timer.innerHTML = `${hh}h:${mm}m:${ss}s`;
+		timer.innerHTML = `${hh}:${mm}:${ss}`;
 	}, {signal: controller.signal});
 
 	document.addEventListener('mousedown', UnfocusTimer)
@@ -178,16 +155,6 @@ function ClickTimer(timer) {
 function TargetShowcaseSize() {
 	const targetSize = document.getElementById("TargetSize");
 	let size = parseInt(targetSize.value);
-
-	//if (size > 21) {
-	//	targetSize.value = 21;
-	//	return;
-	//}
-
-	//if (size < 1) {
-	//	targetSize.value = 1;
-	//	return;
-	//}
 
 	targetShowcase.style.width = `${size}vh`;
 	targetShowcase.style.height = `${size}vh`;
@@ -233,9 +200,67 @@ async function StartGame() {
 	const randomBool = document.getElementById("RandomBool").checked;
 	const plain = document.getElementById("Plain");
 
+	document.getElementById('results_tab').style.display = 'none';
 	document.getElementById("ResetBtn").style.display = "block";
 	document.getElementById("scoretab").style.display = "flex";
 	document.getElementById("UserTab").style.display = "none";
+
+	let isTime = document.getElementById('timer').innerHTML.split(':');
+
+	let ss = isTime[2];
+	let mm = isTime[1];
+	let hh = isTime[0];
+
+	let totalTime = 0;
+	if (ss.length !== 0) totalTime += parseInt(ss);
+	if (mm.length !== 0) totalTime += parseInt(mm) * 60;
+	if (hh.length !== 0) totalTime += parseInt(hh) * 3600;
+
+	if (totalTime > 0) {
+		const timer = document.getElementById('score-tab-timer');
+		timer.style.display = 'block';
+		timer.innerHTML = document.getElementById('timer').innerHTML;
+
+		clearTimer = setInterval(() => {
+			totalTime--;
+
+			if (totalTime <= 0) {
+				clearInterval(clearTimer);
+				EndGame();
+			}
+
+			let seconds = totalTime;
+
+			let ss = Math.floor(seconds % 60).toString();
+
+			let mm = Math.floor((seconds / 60) % 60).toString();
+
+			let hh = Math.floor((seconds / 3600) % 100).toString();
+
+			if (ss.length === 0) {
+				ss = '00';
+			}
+			else if (ss.length === 1) {
+				ss = `0${ss}`;
+			}
+
+			if (mm.length === 0) {
+				mm = '00';
+			}
+			else if (mm.length === 1) {
+				mm = `0${mm}`;
+			}
+
+			if (hh.length === 0) {
+				hh = '00';
+			}
+			else if (hh.length === 1) {
+				hh = `0${hh}`;
+			}
+
+			timer.innerHTML = `${hh}:${mm}:${ss}`;
+		}, 1000)
+	}
 
 	for (var i = 0; i < amount; i++) {
 		var TargetClass = new Target(parseInt(targetSize));
@@ -341,8 +366,24 @@ async function StartGame() {
 	await EndAnimation();
 }
 
+function ResultsScreen() {
+	document.getElementById('results_tab').style.display = 'block';
+
+	const totalResult = document.getElementById('TotalShoots_result');
+	const MissResult = document.getElementById('MissShoots_result');
+	const AccuracyResult = document.getElementById('Accuracy_result');
+	const ScoreResult = document.getElementById('Score_result');
+
+	totalResult.innerHTML = document.getElementById("TotalShoots").innerHTML
+	MissResult.innerHTML = document.getElementById("MissShoots").innerHTML
+	AccuracyResult.innerHTML = document.getElementById("Accuracy").innerHTML
+	ScoreResult.innerHTML = document.getElementById("Score").innerHTML
+}
+
 async function EndGame() {
 	await StartAnimation();
+
+	ResultsScreen();
 
 	document.getElementById("TotalShoots").innerHTML = 0;
 	document.getElementById("MissShoots").innerHTML = 0;

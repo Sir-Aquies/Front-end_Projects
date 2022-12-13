@@ -1,7 +1,7 @@
 * {
 	box-sizing: border-box;
 	color: var(--quinary) !important; 
-	/*cursor: url(../images/cursor.png), auto;*/
+	/*cursor: url(../images/AccuracyCursor.png), auto;*/
 }
 
 html {
@@ -82,9 +82,17 @@ body {
 .score-tab {
 	display: none;
 	justify-content: space-around;
+	align-items: center;
+	padding: 0.3rem 0;
 	width: 100%;
 	border: 0.5vh solid var(--quaternary);
 	border-bottom: none;
+}
+
+.score-tab > .timer {
+	display: none;
+	font-size: 3vh;
+	height: fit-content;
 }
 
 .normal-btn {
@@ -101,6 +109,27 @@ body {
 	width: 100%;
 	border: 0.5vh solid var(--quaternary);
 	overflow: hidden;
+}
+
+.results-tab {
+	display: none;
+	margin-left: 5rem;
+	position: relative;
+	min-width: fit-content;
+	height: fit-content;
+	border: 0.5vh solid var(--quaternary);
+	padding: 1vh;
+}
+
+.close-results {
+	background-color: inherit;
+	border: inherit;
+	width: fit-content; 
+	height: fit-content;
+	line-height: 1;
+	position: absolute;
+	right: 1vh;
+	top: 1vh;
 }
 
 .user-tab {
@@ -174,10 +203,16 @@ input, #TargetContainer {
 	align-items: center;
 }
 
+.input-container-left > label {
+	line-height: 1.15;
+}
+
 .timer {
-	width: 80%;
-	height: 3rem;
+	width: fit-content;
+	font-size: 4vh;
+	padding: 0.5rem;
 	text-align: center;
+	line-height: 1;
 	background-color: var(--secondary);
 	border: 0.5vh solid var(--quaternary);
 }
