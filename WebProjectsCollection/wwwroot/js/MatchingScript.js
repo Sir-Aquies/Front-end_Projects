@@ -148,8 +148,6 @@ function CreateCards(RowsACols, panel) {
         } while (card1.secretId === -1);
         card1.complete = false;
         card2.complete = false;
-        //card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
-        //card2.style.backgroundImage = card1.style.backgroundImage;
         var array = [card1, card2];
         getJSON("https://picsum.photos/v2/list?page=".concat(card1.secretId, "&limit=1"), array);
         //when the last card is created.
@@ -192,7 +190,6 @@ function getJSON(url, array) {
         var url = data.download_url;
         for (var i = 0; i < array.length; i++) {
             array[i].style.backgroundImage = "url(https://picsum.photos/id/".concat(url.split('/')[4], "/").concat(array[i].offsetWidth, "/").concat(array[i].offsetHeight, ")");
-            //array[i].style.backgroundImage = `url(${url})`;
         }
     };
     xhttp.send();

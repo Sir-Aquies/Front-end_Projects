@@ -79,11 +79,13 @@ document.getElementById('results_tab').addEventListener('click', () => { documen
 
 document.getElementById('timer').addEventListener('click', function () {
 	ClickTimer(this);
-})
+});
 
 function ClickTimer(timer) {
 	let text = '';
 	let controller = new AbortController();
+
+	timer.style.boxShadow = '0px 0px 30px 5px var(--secondary)';
 
 	document.addEventListener('keydown', function (key) {
 		if (key.key == 'Backspace') {
@@ -116,30 +118,9 @@ function ClickTimer(timer) {
 			}
 		}
 
-		ss = ss.split('').reverse().join('');
-		mm = mm.split('').reverse().join('');
-		hh = hh.split('').reverse().join('');
-
-		if (ss.length === 0) {
-			ss = '00';
-		}
-		else if (ss.length === 1) {
-			ss = `0${ss}`;
-		}
-
-		if (mm.length === 0) {
-			mm = '00';
-		}
-		else if (mm.length === 1) {
-			mm = `0${mm}`;
-		}
-
-		if (hh.length === 0) {
-			hh = '00';
-		}
-		else if (hh.length === 1) {
-			hh = `0${hh}`;
-		}
+		ss = ss.split('').reverse().join('').padStart(2, '0');
+		mm = mm.split('').reverse().join('').padStart(2, '0');
+		hh = hh.split('').reverse().join('').padStart(2, '0');
 
 		timer.innerHTML = `${hh}:${mm}:${ss}`;
 	}, {signal: controller.signal});
@@ -148,6 +129,7 @@ function ClickTimer(timer) {
 
 	function UnfocusTimer() {
 		controller.abort();
+		timer.style.boxShadow = 'none';
 		document.removeEventListener('mousedown', UnfocusTimer)
 	}
 }
@@ -184,6 +166,7 @@ function EndAnimation() {
 		}, 1000);
 	});
 }
+let clearTimer = 0;
 
 async function StartGame() {
 	const amount = parseInt(document.getElementById("TargetAmount").value);
@@ -231,32 +214,11 @@ async function StartGame() {
 
 			let seconds = totalTime;
 
-			let ss = Math.floor(seconds % 60).toString();
+			let ss = Math.floor(seconds % 60).toString().padStart(2, '0');
 
-			let mm = Math.floor((seconds / 60) % 60).toString();
+			let mm = Math.floor((seconds / 60) % 60).toString().padStart(2, '0');
 
-			let hh = Math.floor((seconds / 3600) % 100).toString();
-
-			if (ss.length === 0) {
-				ss = '00';
-			}
-			else if (ss.length === 1) {
-				ss = `0${ss}`;
-			}
-
-			if (mm.length === 0) {
-				mm = '00';
-			}
-			else if (mm.length === 1) {
-				mm = `0${mm}`;
-			}
-
-			if (hh.length === 0) {
-				hh = '00';
-			}
-			else if (hh.length === 1) {
-				hh = `0${hh}`;
-			}
+			let hh = Math.floor((seconds / 3600) % 100).toString().padStart(2, '0');
 
 			timer.innerHTML = `${hh}:${mm}:${ss}`;
 		}, 1000)
@@ -383,6 +345,7 @@ function ResultsScreen() {
 async function EndGame() {
 	await StartAnimation();
 
+	clearInterval(clearTimer);
 	ResultsScreen();
 
 	document.getElementById("TotalShoots").innerHTML = 0;
@@ -470,8 +433,6 @@ function CreaterTarget(size, show) {
 	const targetdiv = document.createElement("div");
 
 	targetdiv.className = 'target';
-	//targetdiv.style.height = `${size}0px`;
-	//targetdiv.style.width = `${size}0px`;
 	targetdiv.style.height = `${size}vh`;
 	targetdiv.style.width = `${size}vh`;
 	targetdiv.id = `target_${amount}`;

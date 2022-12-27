@@ -1,6 +1,6 @@
 * {
 	box-sizing: border-box;
-	color: var(--quinary) !important; 
+	color: var(--quinary);
 	/*cursor: url(../images/AccuracyCursor.png), auto;*/
 }
 
@@ -96,7 +96,7 @@ body {
 }
 
 .normal-btn {
-	font-size: 2.5vh;
+	font-size: 3vh;
 	border: 0.2vh solid var(--quaternary);
 }
 
@@ -321,12 +321,12 @@ input, #TargetContainer {
 }
 
 #TargetAmount:focus {
-	outline: 3px solid var(--secondary);
-	box-shadow: 0px 0px 35px var(--secondary);
+	outline: 0;
+	box-shadow: 0px 0px 30px 5px var(--secondary);
 }
 
 #PlayButton:hover {
-	box-shadow: 0px 0px 35px var(--secondary);
+	box-shadow: 0px 0px 30px 5px var(--secondary);
 }
 
 input[type=range] {

@@ -155,70 +155,26 @@ function Circle() {
     var k = 500;
     var r_2 = r * (55 / 100);
     var pixels = [];
-    for (var i = (k - r); i <= (k + r); i += 2) {
-        var position = X(i);
+    for (var i = 0; i <= (r * 2 * Math.PI); i++) {
+        var x = h + r * Math.cos(i);
+        var y = k + r * Math.sin(i);
         var Plus = CreatePixel();
         Plus.id = "positive".concat(i);
-        Plus.style.left = "".concat(position.positive, "px");
-        Plus.style.top = "".concat(i, "px");
+        Plus.style.left = "".concat(x, "px");
+        Plus.style.top = "".concat(y, "px");
         document.body.appendChild(Plus);
-        var Minus = CreatePixel();
-        Minus.id = "negative".concat(i);
-        Minus.style.left = "".concat(position.negative, "px");
-        Minus.style.top = "".concat(i, "px");
-        document.body.appendChild(Minus);
-        pixels.push(Plus, Minus);
-        if (i > (h - r_2) && i < (h + r_2)) {
-            var pixelPlus2 = CreatePixel();
-            pixelPlus2.id = "positive".concat(i);
-            pixelPlus2.style.left = "".concat(i, "px");
-            pixelPlus2.style.top = "".concat(position.positive, "px");
-            document.body.appendChild(pixelPlus2);
-            var pixelMinus2 = CreatePixel();
-            pixelMinus2.id = "negative".concat(i);
-            pixelMinus2.style.left = "".concat(i, "px");
-            pixelMinus2.style.top = "".concat(position.negative, "px");
-            document.body.appendChild(pixelMinus2);
-            pixels.push(pixelMinus2, pixelPlus2);
-        }
+        pixels.push(Plus);
     }
-    //for (let i = 0; i <= (r*2*Math.PI); i++) {
-    //    let x = h + r * Math.cos(i);
-    //    let y = k + r * Math.sin(i);
-    //    const Plus = CreatePixel();
-    //    Plus.id = `positive${i}`;
-    //    Plus.style.left = `${x}px`;
-    //    Plus.style.top = `${y}px`;
-    //    document.body.appendChild(Plus);
-    //    pixels.push(Plus);
-    //}
     document.getElementById('demo').innerHTML = pixels.length.toString();
-    //let index = 0;
-    //let timer = setInterval(() => {
-    //    const pixel = pixels[index];
-    //    pixel.style.opacity = '1';
-    //    setTimeout(() => {
-    //        pixel.style.opacity = '0';
-    //    }, 500);
-    //    if (index == pixels.length) {
-    //        //clearInterval(timer);
-    //        index = 0;
-    //    }
-    //    index++;
-    //}, 10)
-    function X(y) {
-        var output = {};
-        var c = -Math.pow(r, 2) + Math.pow(y, 2) + Math.pow(h, 2) + Math.pow(k, 2) - 2 * (y * k);
-        var b = -2 * h;
-        var negative = (-b - Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
-        var positive = (-b + Math.sqrt(Math.pow(b, 2) - (4 * c))) / 2;
-        output.negative = Math.round(negative);
-        output.positive = Math.round(positive);
-        return output;
-    }
+    var index = 0;
+    var timer = setInterval(function () {
+        var pixel = pixels[index];
+        pixel.style.opacity = '1';
+        index++;
+    }, 10);
     function CreatePixel() {
         var pixel = document.createElement('div');
-        pixel.style.opacity = '1';
+        pixel.style.opacity = '0';
         pixel.className = 'pixel';
         return pixel;
     }

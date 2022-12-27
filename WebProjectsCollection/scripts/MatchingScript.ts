@@ -147,9 +147,6 @@ function CreateCards(RowsACols: RaC, panel: HTMLDivElement): void {
 		card1.complete = false;
 		card2.complete = false;
 
-		//card1.style.backgroundImage = `url(https://picsum.photos/${card1.offsetWidth}/${card1.offsetHeight}?random&secId=${ crypto.randomUUID() })`;
-		//card2.style.backgroundImage = card1.style.backgroundImage;
-
 		const array: Card[] = [card1, card2];
 
 		getJSON(`https://picsum.photos/v2/list?page=${ card1.secretId }&limit=1`, array)
@@ -181,7 +178,6 @@ function getJSON(url: string, array: Card[]) {
 
 		for (let i = 0; i < array.length; i++) {
 			array[i].style.backgroundImage = `url(https://picsum.photos/id/${ url.split('/')[4] }/${ array[i].offsetWidth }/${ array[i].offsetHeight })`;
-			//array[i].style.backgroundImage = `url(${url})`;
 		}
 	}
 
